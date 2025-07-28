@@ -43,7 +43,7 @@ nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceFullComp
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
 
-picom -f --backend glx &
+picom -f --backend xrender --vsync &
 emacs --daemon &
 feh --bg-fill --randomize ~/Desktop/Wallps
 sxhkd -m 1 &

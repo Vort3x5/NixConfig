@@ -8,7 +8,7 @@ in
 	# Users
 	users.users.vortex = {
 	  isNormalUser = true;
-	  extraGroups = [ "wheel" "video" "audio" "networkmanager" ];
+	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" ];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";
 	};
@@ -46,16 +46,17 @@ in
 	boot.loader.grub.enable = false;
 	
 	# Xanmod kernel as default
-	boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+	boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_stable;
 	
 	# Keep standard kernel as backup for systemd-boot switching
 	boot.extraModulePackages = [ ];
 
 	boot.blacklistedKernelModules = [ "snd_pcsp" ];
         
-	# Enable LVM support
 	boot.initrd.kernelModules = [ "dm-snapshot" "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
 	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+        
+	# Enable LVM support
 	services.lvm.enable = true;
 
 	hardware.opengl = {
@@ -80,22 +81,6 @@ in
     # Packages
 	environment.systemPackages = systemPackages.list;
 
-	# Secrets config
-    sops = {
-    	defaultSopsFile = ./secrets.yaml;
-    	defaultSopsFormat = "yaml";
-    	age.keyFile = "/home/vortex/.config/sops/age/keys.txt";
-    
-    	secrets = {
-    		ssh_private_key = {
-    			owner = "vortex";
-    			group = "users";
-    			mode = "0600";
-    			path = "/home/vortex/.ssh/id_ed25519";
-    		};
-    	};
-    };
-
 	networking = {
 		networkmanager = {
 			enable = true;
@@ -114,6 +99,13 @@ in
 		displayManager.startx.enable = true;
 		windowManager.bspwm.enable = true;
 	};
+
+	programs.steam = {
+		enable = true;
+		gamescopeSession.enable = true;
+	};
+
+	programs.gamemode.enable = true;
 
     # Time zone and locale
 	time.timeZone = "Europe/Warsaw";

@@ -12,9 +12,9 @@
 		};
 	};
 
-	services.picom = {
+    services.picom = {
 		enable = true;
-		backend = "glx";
+		backend = "xrender";
 	};
 
 	programs.ssh = {

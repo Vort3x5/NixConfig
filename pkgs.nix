@@ -41,6 +41,9 @@
         # Apps
 		firefox steam discord
 
+        # Gaming
+		mangohud gamemode gamescope
+
         # File manager (minimal)
 		ranger
 
