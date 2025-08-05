@@ -40,6 +40,7 @@
 		unzip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard
+		wmname
 
         # Apps
 		firefox steam discord
