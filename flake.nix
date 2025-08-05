@@ -30,6 +30,7 @@
 		{
 			home-manager.useGlobalPkgs = true;
 			home-manager.useUserPackages = true;
+			home-manager.backupFileExtension = "backup";
 			home-manager.users.vortex = { config, pkgs, ... }:
 			    nixpkgs.lib.mkMerge [
 				    (import ./home.nix { inherit config pkgs; })
