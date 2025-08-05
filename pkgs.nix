@@ -38,7 +38,7 @@
         # Utils
 		wget curl 
 		unzip unclutter
-		ksnip lsd ripgrep pfetch killall
+		flameshot lsd ripgrep pfetch killall
 		wl-clipboard
 
         # Apps

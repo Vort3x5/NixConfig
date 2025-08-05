@@ -33,6 +33,22 @@
 			nvidiaBusId = "PCI:1:0:0";
 		};
 	};
+        
+	# Secrets config
+    sops = {
+		defaultSopsFile = ./secrets.yaml;
+		defaultSopsFormat = "yaml";
+		age.keyFile = "/home/vortex/.config/sops/age/keys.txt";
+		
+		secrets = {
+			ssh_private_key = {
+				owner = "vortex";
+				group = "users";
+				mode = "0600";
+				path = "/home/vortex/.ssh/id_ed25519";
+			};
+		};
+    };
 
 	environment.sessionVariables = {
 		DRI_PRIME = "1";

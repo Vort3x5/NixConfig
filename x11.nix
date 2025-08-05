@@ -43,7 +43,7 @@
 			"super + b" = "firefox";
 			"super + s" = "steam";
 			"super + d" = "discord";
-			"super + p" = "ksnip -r -c";
+			"super + p" = "flameshot gui";
 
 			# BSPWM controls
 			"super + {q,r}" = "bspc {quit,wm -r}";
