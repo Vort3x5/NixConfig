@@ -15,6 +15,9 @@
 		networkmanager
 		networkmanagerapplet # optional
 
+        # Sound
+		alsa-utils
+
         # Terminal and shell
 		alacritty fish
 
