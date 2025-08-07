@@ -2,6 +2,7 @@
 {
 	home.file = {
 		".xinitrc".source = ./misc/.xinitrc;
+		".config/sxhkd/sxhkdrc".source = ./misc/sxhkdrc;
 	};
 
 	xdg.enable = true;
@@ -29,58 +30,6 @@
 			"bspc node -g sticky"
 			"systemctl --user start polybar"
 		];
-	};
-
-	services.sxhkd = {
-		enable = true;
-		keybindings = {
-			# Reload sxhkd
-			"super + Escape" = "pkill -USR1 -x sxhkd";
-
-            # Choose layout
-			"super + alt + c" = "set-colemak";
-			"super + alt + q" = "set-qwerty";
-
-			# Applications
-			"super + t" = "alacritty";
-			"super + a" = "rofi -show run";
-			"super + b" = "firefox";
-			"super + s" = "steam";
-			"super + d" = "discord";
-			"super + p" = "flameshot gui";
-
-			# BSPWM controls
-			"super + {q,r}" = "bspc {quit,wm -r}";
-			"super + c" = "bspc node -{c,k}";
-			"super + g" = "bspc node -s biggest.window";
-
-			# Window states
-			"super + {t,alt + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
-
-			# Focus/swap directions (Colemak-DH)
-			"super + {_,shift + }{m,n,e,i}; test "$(current-layout)" = "colemak"" = "bspc node -{f,s} {west,south,north,east}";
-			"super + {_,shift + }{h,j,k,l}; test "$(current-layout)" = "qwerty"" = "bspc node -{f,s} {west,south,north,east}";
-
-			# Focus next/previous window
-			"super + {_,shift + }n" = "bspc node -f {next,prev}.local.!hidden.window";
-
-			# Focus/send to desktop
-			"super + {_,shift + }{1-9,0}" = "bspc {desktop -f,node -d} '^{1-9,10}'";
-
-			# Preselect direction
-			"super + ctrl + {m,n,e,i}; test "$(current-layout)" = "colemak"" = "bspc node -p {west,south,north,east}";
-			"super + ctrl + {h,j,k,l}; test "$(current-layout)" = "qwerty"" = "bspc node -p {west,south,north,east}";
-			"super + ctrl + space" = "bspc node -p cancel";
-
-			# Resize windows
-			"super + alt + {m,n,e,i}; test "$(current-layout)" = "colemak"" = "bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}";
-			"super + alt + {h,j,k,l}; test "$(current-layout)" = "qwerty"" = "bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}";
-			"super + alt + shift + {m,n,e,i}; test "$(current-layout)" = "colemak"" = "bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}";
-			"super + alt + shift + {h,j,k,l}; test "$(current-layout)" = "qwerty"" = "bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}";
-
-			# Move floating window
-			"super + {Left,Down,Up,Right}" = "bspc node -v {-20 0,0 20,0 -20,20 0}";
-		};
 	};
 
 	services.polybar = {

@@ -41,15 +41,16 @@
 			home-manager.useGlobalPkgs = true;
 			home-manager.useUserPackages = true;
 			home-manager.backupFileExtension = "backup";
-			home-manager.users.vortex = { config, pkgs, ... }:
-			    nixpkgs.lib.mkMerge [
-				    (import ./home.nix { inherit config pkgs; })
-				    (import ./x11.nix { inherit config pkgs; })
-				    (import ./neovim.nix { inherit config pkgs inputs; })
+			home-manager.users.vortex = { config, pkgs, ... }: {
+			    imports = [
+					inputs.nvf.homeManagerModules.default
+				    ./home.nix
+				    ./x11.nix
+				    ./neovim.nix
 				];
+			};
 			home-manager.extraSpecialArgs = { inherit inputs; };
 		}
-		nvf.homeManagerModules.default
 	];
 
 	mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {

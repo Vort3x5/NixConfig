@@ -63,7 +63,7 @@ in
                     }
                 ];
 
-                theme.enable = false
+                theme.enable = false;
 
 				startPlugins = [
 					NeoSolarized
