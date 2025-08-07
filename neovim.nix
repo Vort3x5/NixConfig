@@ -75,10 +75,6 @@ in
 
 				treesitter = {
                     enable = true;
-                    grammars = [
-                        "llvm" "c" "cpp" "lua" "rust" "fish" 
-                        "python" "bash" "sql" "vim" "go"
-                    ];
                     highlight = {
                         enable = true;
                         disable = [ "c" "cpp" "rust" ];
@@ -88,31 +84,7 @@ in
 
 				statusline.lualine = {
                     enable = true;
-                    theme = "NeoSolarized";
-                    componentSeparators = {
-                        left = "";
-                        right = "";
-                    };
-                    sectionSeparators = {
-                        left = "";
-                        right = "";
-                    };
-                    sections = {
-                        lualine_a = [ "mode" ];
-                        lualine_b = [ "branch" ];
-                        lualine_c = [ "filename" ];
-                        lualine_x = [ "encoding" "filetype" ];
-                        lualine_y = [ "progress" ];
-                        lualine_z = [ "location" ];
-                    };
-                    inactiveSections = {
-                        lualine_a = [ ];
-                        lualine_b = [ ];
-                        lualine_c = [ "filename" ];
-                        lualine_x = [ "location" ];
-                        lualine_y = [ ];
-                        lualine_z = [ ];
-                    };
+                    theme = "solarized_dark";
                 };
 
                 # Telescope with your ripgrep settings
@@ -147,14 +119,6 @@ in
 
                 autocomplete.nvim-cmp = {
                     enable = true;
-                    setupOpts = {
-                        sources = [
-                            { name = "nvim_lsp"; }
-                            { name = "luasnip"; }
-                            { name = "buffer"; }
-                            { name = "path"; }
-                        ];
-                    };
                 };
 
 				snippets.luasnip.enable = true;
@@ -174,7 +138,7 @@ in
 				lazy = {
                     enable = true;
                     plugins = {
-						"NeoSolarized.nvim" = {
+						"vimplugin-NeoSolarized" = {
                             package = NeoSolarized;
                             setupModule = "NeoSolarized";
                             setupOpts = {
