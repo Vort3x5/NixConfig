@@ -16,6 +16,16 @@
 			url = "github:Mic92/sops-nix/9517dcb";
 			inputs.nixpkgs.follows = "nixpkgs-unstable";
 		};
+
+		nvf = {
+			url = "github:notashelf/nvf";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
+		NeoSolarized = {
+			url = "github:Tsuzat/NeoSolarized.nvim";
+			flake = false;
+		};
 	};
 
 	outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, sops-nix, ...}@inputs:
@@ -35,9 +45,11 @@
 			    nixpkgs.lib.mkMerge [
 				    (import ./home.nix { inherit config pkgs; })
 				    (import ./x11.nix { inherit config pkgs; })
+				    (import ./neovim.nix { inherit config pkgs inputs; })
 				];
 			home-manager.extraSpecialArgs = { inherit inputs; };
 		}
+		nvf.homeManagerModules.default
 	];
 
 	mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {

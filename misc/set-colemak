@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "colemak" > "$HOME/.config/current-layout"
+pkill -USR1 -x sxhkd  # Reload sxhkd
+
+# Signal all nvim instances
+for pid in $(pgrep nvim); do
+	kill -USR1 "$pid" 2>/dev/null || true
+done
+
+notify-send "Layout" "Software switched to Colemak" 2>/dev/null || echo "Software switched to Colemak"
+        

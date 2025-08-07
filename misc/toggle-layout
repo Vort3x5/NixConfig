@@ -1,0 +1,24 @@
+#!/bin/sh
+LAYOUT_FILE="$HOME/.config/current-layout"
+SXHKD_CONFIG_DIR="$HOME/.config/sxhkd"
+
+# Check current layout
+if [[ -f "$LAYOUT_FILE" && "$(cat "$LAYOUT_FILE")" == "colemak" ]]; then
+	# Switch to QWERTY
+	echo "qwerty" > "$LAYOUT_FILE"
+	setxkbmap us
+	ln -sf "$SXHKD_CONFIG_DIR/sxhkdrc-qwerty" "$SXHKD_CONFIG_DIR/sxhkdrc"
+	echo "Switched to QWERTY"
+else
+	# Switch to Colemak
+	echo "colemak" > "$LAYOUT_FILE"
+	setxkbmap us -variant colemak
+	ln -sf "$SXHKD_CONFIG_DIR/sxhkdrc-colemak" "$SXHKD_CONFIG_DIR/sxhkdrc"
+	echo "Switched to Colemak"
+fi
+
+# Reload nvim configs
+echo 'lua require("config-reload")()' | ${pkgs.neovim}/bin/nvim --server /tmp/nvim-server --remote-send || true
+
+layout=$(cat "$LAYOUT_FILE")
+notify-send "Layout switched to $layout" || echo "Layout switched to $layout"
