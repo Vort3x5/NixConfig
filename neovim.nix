@@ -1,212 +1,166 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs, inputs, unstable, ...}:
 let
-	NeoSolarized = pkgs.vimUtils.buildVimPlugin {
-		name = "NeoSolarized";
-		src = inputs.NeoSolarized;
-	};
+  NeoSolarized = pkgs.vimUtils.buildVimPlugin {
+    name = "NeoSolarized";
+    src = inputs.NeoSolarized;
+  };
 in
 {
-    programs.nvf = {
-        enable = true;
-        
-        settings = {
-            vim = {
-				additionalRuntimePaths = [ ./misc ];
-
-                viAlias = false;
-                vimAlias = true;
-                globals.mapleader = " ";
-                
-                options = {
-                    number = true;
-                    relativenumber = true;
-                    cmdheight = 1;
-                    hlsearch = true;
-                    ignorecase = false;
-                    showmode = false;
-                    smartindent = true;
-                    swapfile = false;
-                    undofile = false;
-                    shiftwidth = 4;
-                    tabstop = 4;
-                    cursorline = false;
-                    numberwidth = 2;
-                    wrap = false;
-                    termguicolors = true;
-                    background = "dark";
-                    scrolloff = 8;
-                    clipboard = "unnamedplus";
-                };
-
-                # Basic keymaps to start
-                keymaps = [
-                    # Save and quit
-                    { key = "<C-s>"; mode = "n"; action = ":w<cr>"; desc = "Save file"; }
-                    { key = "<C-s>"; mode = "i"; action = "<Esc>:w<cr>a"; desc = "Save file (insert)"; }
-                    { key = "<C-q>"; mode = "n"; action = ":q<cr>"; desc = "Quit"; }
-
-                    # File Tree
-					{ key = "<leader>pv"; mode = "n"; action = ":Neotree toggle<cr>"; desc = "Toggle file tree"; }
-                    
-                    # Telescope
-                    { key = "<leader>f"; mode = "n"; action = ":Telescope find_files<cr>"; desc = "Find files"; }
-                    { key = "<leader>g"; mode = "n"; action = ":Telescope live_grep<cr>"; desc = "Live grep"; }
-                    { key = "<leader>tb"; mode = "n"; action = ":Telescope buffers<cr>"; desc = "Find buffers"; }
-                    { key = "<leader>th"; mode = "n"; action = ":Telescope help_tags<cr>"; desc = "Help tags"; }
-
-                    # Search and replace current word
-                    { 
-                        key = "<leader>s"; 
-                        mode = "n"; 
-                        action = ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>";
-                        desc = "Search and replace current word"; 
-                    }
-                ];
-
-                theme.enable = false;
-
-				startPlugins = [
-					NeoSolarized
-					pkgs.vimPlugins.vim-easy-align
-					pkgs.vimPlugins.vim-surround
-					pkgs.vimPlugins.vim-multiple-cursors
-					pkgs.vimPlugins.nvim-autopairs
-				];
-
-				treesitter = {
-                    enable = true;
-                    highlight = {
-                        enable = true;
-                        disable = [ "c" "cpp" "rust" ];
-                        additionalVimRegexHighlighting = true;
-                    };
-                };
-
-				statusline.lualine = {
-                    enable = true;
-                    theme = "solarized_dark";
-                };
-
-                # Telescope with your ripgrep settings
-                telescope = {
-                    enable = true;
-                    setupOpts = {
-                        defaults = {
-                            vimgrep_arguments = [
-                                "rg" "--color=never" "--no-heading" 
-                                "--with-filename" "--line-number" 
-                                "--column" "--smart-case" "-uu"
-                            ];
-                        };
-                        pickers = {
-                            find_files = {
-                                hidden = true;
-                            };
-                        };
-                    };
-                };
-
-                lsp = {
-                    enable = true;
-                    servers = {
-						nil_ls.enable = true;
-                        pylsp.enable = true;
-                        lua_ls.enable = true;
-                        clangd.enable = true;
-                        bashls.enable = true;
-                    };
-                };
-
-                autocomplete.nvim-cmp = {
-                    enable = true;
-                };
-
-				snippets.luasnip.enable = true;
-
-				filetree.neo-tree.enable = true;
-
-				git = {
-					enable = true;
-					gitsigns.enable = true;
-				};
-
-				debugger.nvim-dap = {
-					enable = true;
-					ui.enable = true;
-				};
-
-				lazy = {
-                    enable = true;
-                    plugins = {
-						"vimplugin-NeoSolarized" = {
-                            package = NeoSolarized;
-                            setupModule = "NeoSolarized";
-                            setupOpts = {
-                                style = "dark";
-                                transparent = false;
-                                terminal_colors = true;
-                                enable_italics = true;
-                                styles = {
-                                    comments = { italic = true; };
-                                    keywords = { italic = true; };
-                                    functions = { bold = true; };
-                                    variables = { };
-                                    string = { italic = false; };
-                                    underline = true;
-                                    undercurl = true;
-                                };
-                            };
-                            # Load early and set colorscheme
-                            priority = 1000;
-                            lazy = false;
-                            after = ''
-                                vim.cmd.colorscheme("NeoSolarized")
-                            '';
-                        };
-
-                        "vim-easy-align" = {
-                            package = pkgs.vimPlugins.vim-easy-align;
-                            keys = [
-                                { key = "ga"; mode = [ "n" "x" ]; action = "<Plug>(EasyAlign)"; desc = "Easy Align"; }
-                            ];
-                        };
-                        
-                        "trouble.nvim" = {
-                            package = pkgs.vimPlugins.trouble-nvim;
-                            setupModule = "trouble";
-                            setupOpts = {
-                                icons = false;
-                            };
-                            cmd = [ "Trouble" ];
-                        };
-                        
-                        "nvim-autopairs" = {
-                            package = pkgs.vimPlugins.nvim-autopairs;
-                            setupModule = "nvim-autopairs";
-                            event = [ "InsertEnter" ];
-                        };
-                    };
-                };
-
-				luaConfigRC = {
-                    colemak-commands = ''
-                        -- Simple Colemak toggle commands
-                        vim.api.nvim_create_user_command("Colemak", function()
-                            require('colemak').setup()
-                        end, { desc = "Enable Colemak mappings" })
-                        
-                        vim.api.nvim_create_user_command("Qwerty", function()
-                            require('colemak').disable()
-                        end, { desc = "Disable Colemak mappings" })
-                    '';
-                };
-
-                extraPackages = with pkgs; [
-                    rust-analyzer nil python3Packages.python-lsp-server
-                    lua-language-server clang-tools nodePackages.bash-language-server
-                    ripgrep fd rustc cargo gcc python3
-                ];
-            };
-        };
+  programs.nixvim = {
+    enable = true;
+    
+    opts = {
+      number = true;
+      relativenumber = true;
+      cmdheight = 1;
+      hlsearch = true;
+      ignorecase = false;
+      showmode = false;
+      smartindent = true;
+      swapfile = false;
+      undofile = false;
+      shiftwidth = 4;
+      tabstop = 4;
+      cursorline = false;
+      numberwidth = 2;
+      wrap = false;
+      termguicolors = true;
+      background = "dark";
+      scrolloff = 8;
+      clipboard = "unnamedplus";
     };
+    
+    globals = {
+      mapleader = " ";
+    };
+
+    keymaps = [
+      # Save and quit
+      { mode = "n"; key = "<C-s>"; action = ":w<cr>"; options.desc = "Save file"; }
+      { mode = "i"; key = "<C-s>"; action = "<Esc>:w<cr>a"; options.desc = "Save file (insert)"; }
+      { mode = "n"; key = "<C-q>"; action = ":q<cr>"; options.desc = "Quit"; }
+
+      # File Tree
+      { mode = "n"; key = "<leader>pv"; action = ":Neotree toggle<cr>"; options.desc = "Toggle file tree"; }
+      
+      # Telescope
+      { mode = "n"; key = "<leader>f"; action = ":Telescope find_files<cr>"; options.desc = "Find files"; }
+      { mode = "n"; key = "<leader>g"; action = ":Telescope live_grep<cr>"; options.desc = "Live grep"; }
+      { mode = "n"; key = "<leader>tb"; action = ":Telescope buffers<cr>"; options.desc = "Find buffers"; }
+      { mode = "n"; key = "<leader>th"; action = ":Telescope help_tags<cr>"; options.desc = "Help tags"; }
+
+      # Search and replace current word
+      { 
+        mode = "n";
+        key = "<leader>s";
+        action = ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>";
+        options.desc = "Search and replace current word";
+      }
+    ];
+
+    extraPlugins = [
+      NeoSolarized
+      pkgs.vimPlugins.vim-easy-align
+      pkgs.vimPlugins.vim-surround  
+      pkgs.vimPlugins.vim-multiple-cursors
+      pkgs.vimPlugins.trouble-nvim
+    ];
+
+    plugins = {
+
+      lsp = {
+        enable = true;
+        servers = {
+          nil_ls.enable = true;
+          pylsp.enable = true;
+          lua_ls.enable = true;
+          clangd.enable = true;
+        };
+      };
+
+      treesitter = {
+        enable = true;
+      };
+
+      lualine = {
+        enable = true;
+        theme = "solarized_dark";
+      };
+
+      telescope = {
+        enable = true;
+        settings = {
+          defaults = {
+            vimgrep_arguments = [
+              "rg" "--color=never" "--no-heading"
+              "--with-filename" "--line-number" 
+              "--column" "--smart-case" "-uu"
+            ];
+          };
+          pickers = {
+            find_files = {
+              hidden = true;
+            };
+          };
+        };
+      };
+
+      cmp = {
+        enable = true;
+        autoEnableSources = true;
+      };
+
+      luasnip.enable = true;
+
+      neo-tree.enable = true;
+
+      gitsigns.enable = true;
+
+      nvim-autopairs.enable = true;
+
+      dap = {
+        enable = true;
+        extensions.dap-ui.enable = true;
+      };
+    };
+
+    extraConfigLua = ''
+      -- Set colorscheme
+      pcall(vim.cmd.colorscheme, "NeoSolarized")
+      
+      -- Include the colemak module from misc/
+      package.path = package.path .. ";" .. vim.fn.stdpath('config') .. "/misc/?.lua"
+      
+      -- Simple Colemak toggle commands
+      vim.api.nvim_create_user_command("Colemak", function()
+        local ok, colemak = pcall(require, 'colemak')
+        if ok then
+          colemak.setup()
+        else
+          vim.notify("Colemak module not found", vim.log.levels.ERROR)
+        end
+      end, { desc = "Enable Colemak mappings" })
+      
+      vim.api.nvim_create_user_command("Qwerty", function()
+        local ok, colemak = pcall(require, 'colemak')
+        if ok then
+          colemak.disable()
+        else
+          vim.notify("Colemak module not found", vim.log.levels.ERROR)
+        end
+      end, { desc = "Disable Colemak mappings" })
+
+      -- Easy align setup
+      vim.keymap.set({'n', 'x'}, 'ga', '<Plug>(EasyAlign)', { desc = 'Easy Align' })
+      
+      -- Trouble setup
+      require('trouble').setup({ icons = false })
+    '';
+
+    extraPackages = with unstable; [
+    ];
+  };
+
+  # Copy the colemak.lua file to the right place
+  home.file.".config/nvim/misc/colemak.lua".source = ./misc/colemak.lua;
 }

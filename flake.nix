@@ -7,7 +7,7 @@
 
 		home-manager = {
 			url = "github:nix-community/home-manager/release-24.05";
-			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.nixpkgs.follows = "nixpkgs-unstable";
 		};
 
 		nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -15,11 +15,6 @@
 		sops-nix = {
 			url = "github:Mic92/sops-nix/9517dcb";
 			inputs.nixpkgs.follows = "nixpkgs-unstable";
-		};
-
-		nvf = {
-			url = "github:notashelf/nvf";
-			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		NeoSolarized = {
@@ -30,6 +25,11 @@
 
 	outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, sops-nix, ...}@inputs:
 	let
+
+    unstable = import nixpkgs-unstable {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+    };
 
 	sharedModules = [
 	    ./vortex.nix
@@ -43,24 +43,18 @@
 			home-manager.backupFileExtension = "backup";
 			home-manager.users.vortex = { config, pkgs, ... }: {
 			    imports = [
-					inputs.nvf.homeManagerModules.default
 				    ./home.nix
 				    ./x11.nix
-				    ./neovim.nix
 				];
 			};
-			home-manager.extraSpecialArgs = { inherit inputs; };
+			home-manager.extraSpecialArgs = { inherit inputs unstable; };
 		}
 	];
 
 	mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {
 		system = "x86_64-linux";
 		specialArgs = {
-			inherit inputs;
-			unstable = import nixpkgs-unstable {
-				system = "x86_64-linux";
-				config.allowUnfree = true;
-			};
+			inherit inputs unstable;
 		};
 		modules = sharedModules ++ extraModules;
 	};
