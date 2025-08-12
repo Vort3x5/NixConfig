@@ -172,12 +172,6 @@ set fish_greeting ""
 		};
 	};
 
-	home.packages = [
-		(pkgs.writeShellScriptBin "set-colemak" (builtins.readFile ./misc/set-colemak))
-		(pkgs.writeShellScriptBin "set-qwerty" (builtins.readFile ./misc/set-qwerty))
-		(pkgs.writeShellScriptBin "current-layout" (builtins.readFile ./misc/current-layout))
-	];
-
 	home.activation.createLayoutFile = ''
 		echo "colemak" > "$HOME/.config/current-layout"
 	'';
