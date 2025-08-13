@@ -3,7 +3,7 @@ let
     systemPackages = import ./pkgs.nix { inherit pkgs unstable; };
 in
 {
-	system.stateVersion = "24.05";
+	system.stateVersion = "25.05";
 
 	# Users
 	users.users.vortex = {
@@ -53,15 +53,15 @@ in
 
 	boot.blacklistedKernelModules = [ "snd_pcsp" ];
         
-	boot.initrd.kernelModules = [ "dm-snapshot" "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
+	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
 	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
         
 	# Enable LVM support
 	services.lvm.enable = true;
 
-	hardware.opengl = {
+	hardware.graphics = {
 	  enable = true;
-	  driSupport32Bit = true;
+	  enable32Bit = true;
 	};
         
 	# Allow unfree packages (for NVIDIA)

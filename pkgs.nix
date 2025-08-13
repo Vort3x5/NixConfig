@@ -1,4 +1,4 @@
-{ pkgs, unstable }:
+{ pkgs }:
 {
 	list = with pkgs; [
         # Both kernels available
@@ -9,7 +9,7 @@
 		efibootmgr
 
         # Nix
-		age unstable.sops ssh-to-age
+		age sops ssh-to-age
 
         # Network
 		networkmanager

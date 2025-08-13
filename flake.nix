@@ -2,24 +2,24 @@
 	description = "Vort3x'5 NixOS Config";
 
 	inputs = {
-		nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
 		home-manager = {
-			url = "github:nix-community/home-manager/release-24.05";
-			inputs.nixpkgs.follows = "nixpkgs-unstable";
+			url = "github:nix-community/home-manager/release-25.05";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
 		sops-nix = {
-			url = "github:Mic92/sops-nix/9517dcb";
+			url = "github:Mic92/sops-nix";
 			inputs.nixpkgs.follows = "nixpkgs-unstable";
 		};
 
 		nvf = {
 			url = "github:notashelf/nvf";
-			inputs.nixpkgs.follows = "nixpkgs-unstable";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		NeoSolarized = {
@@ -48,10 +48,8 @@
 			home-manager.backupFileExtension = "backup";
 			home-manager.users.vortex = { config, pkgs, ... }: {
 			    imports = [
-				nvf.homeManagerModules.default
 				    ./home.nix
 				    ./x11.nix
-				    ./neovim.nix
 				];
 			};
 			home-manager.extraSpecialArgs = { inherit inputs unstable; };

@@ -13,14 +13,6 @@ in
     settings = {
       vim = {
 
-          package = unstable.neovim-unwrapped;
-
-          extraPackages = with unstable; [
-              tree-sitter
-              nodejs
-              gcc
-          ];
-
         viAlias = false;
         vimAlias = true;
         
@@ -52,13 +44,7 @@ in
             enableExtraDiagnostics = true;
             nix.enable = true;
             clang.enable = true;
-            python = {
-                enable = true;
-                lsp = {
-                    server = "basedpyright";
-                    package = unstable.basedpyright;
-                };
-            };
+            python.enable = true;
             lua.enable = true;
             markdown.enable = true;
         };
