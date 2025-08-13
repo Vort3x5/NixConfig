@@ -28,7 +28,7 @@
 		};
 	};
 
-	outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, sops-nix, ...}@inputs:
+	outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, sops-nix, nvf, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -51,6 +51,7 @@
 				nvf.homeManagerModules.default
 				    ./home.nix
 				    ./x11.nix
+				    ./neovim.nix
 				];
 			};
 			home-manager.extraSpecialArgs = { inherit inputs unstable; };
