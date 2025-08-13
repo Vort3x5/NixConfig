@@ -17,6 +17,11 @@
 			inputs.nixpkgs.follows = "nixpkgs-unstable";
 		};
 
+		nvf = {
+			url = "github:notashelf/nvf";
+			inputs.nixpkgs.follows = "nixpkgs-unstable";
+		};
+
 		NeoSolarized = {
 			url = "github:Tsuzat/NeoSolarized.nvim";
 			flake = false;
@@ -43,6 +48,7 @@
 			home-manager.backupFileExtension = "backup";
 			home-manager.users.vortex = { config, pkgs, ... }: {
 			    imports = [
+				nvf.homeManagerModules.default
 				    ./home.nix
 				    ./x11.nix
 				];
