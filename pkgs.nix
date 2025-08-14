@@ -1,9 +1,6 @@
 { pkgs }:
 {
 	list = with pkgs; [
-        # Both kernels available
-		linuxKernel.packages.linux_xanmod_stable.kernel
-		linuxKernel.packages.linux_6_12.kernel
 
         # EFI management
 		efibootmgr

@@ -4,6 +4,7 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+		chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
 		home-manager = {
 			url = "github:nix-community/home-manager/release-25.05";
@@ -14,7 +15,7 @@
 
 		sops-nix = {
 			url = "github:Mic92/sops-nix";
-			inputs.nixpkgs.follows = "nixpkgs-unstable";
+			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		nvf = {
@@ -28,7 +29,7 @@
 		};
 	};
 
-	outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, sops-nix, nvf, ...}@inputs:
+	outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, home-manager, nixos-hardware, sops-nix, nvf, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -38,6 +39,8 @@
 
 	sharedModules = [
 	    ./vortex.nix
+
+		chaotic.nixosModules.default
 
 		sops-nix.nixosModules.sops
 

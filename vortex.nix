@@ -1,6 +1,23 @@
-{ config, pkgs, inputs, unstable, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
-    systemPackages = import ./pkgs.nix { inherit pkgs unstable; };
+    systemPackages = import ./pkgs.nix { inherit pkgs; };
+
+	fallout-grub-theme = pkgs.stdenv.mkDerivation {
+		pname = "fallout-grub-theme";
+        version = "1.0";
+        
+        src = pkgs.fetchFromGitHub {
+            owner = "shvchk";
+            repo = "fallout-grub-theme";
+            rev = "80734103d0b48d724f0928e8082b6755bd3b2078";
+            sha256 = "sha256-7kvLfD6Nz4cEMrmCA9yq4enyqVyqiTkVZV5y4RyUatU=";
+        };
+        
+        installPhase = ''
+            mkdir -p $out/share/grub/themes/fallout
+            cp -r * $out/share/grub/themes/fallout/
+        '';
+	};
 in
 {
 	system.stateVersion = "25.05";
@@ -38,26 +55,132 @@ in
 			}
 		});
 	  '';
-	
-	# Boot loader - systemd-boot
-	boot.loader.systemd-boot.enable = true;
-	boot.loader.systemd-boot.configurationLimit = 2;
-	boot.loader.efi.canTouchEfiVariables = true;
-	boot.loader.grub.enable = false;
-	
-	# Xanmod kernel as default
-	boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_stable;
-	
-	# Keep standard kernel as backup for systemd-boot switching
-	boot.extraModulePackages = [ ];
 
-	boot.blacklistedKernelModules = [ "snd_pcsp" ];
+	  boot.loader = {
+        systemd-boot.enable = false;
+        grub = {
+            enable = true;
+            device = "nodev";
+            efiSupport = true;
+            useOSProber = true;
+            configurationLimit = 5;
+            
+            theme = fallout-grub-theme + "/share/grub/themes/fallout";
+            splashImage = null;
+            
+            extraConfig = ''
+                set timeout=10
+                set default=0
+                
+                # Fallout-style colors and fonts
+                set color_normal=light-green/black
+                set color_highlight=yellow/dark-gray
+                
+                # Menu entries will be auto-generated as:
+                # "NixOS" - CachyOS Gaming Kernel (BORE scheduler, gaming optimized)
+                # "NixOS - cachyos-dev" - CachyOS Development (debug symbols, profiling tools)
+                # "NixOS - stable-fallback" - Linux Stable Kernel (maximum compatibility)
+            '';
+        };
+        efi.canTouchEfiVariables = true;
+    };
+
+	specialisation = {
+        dev = {
+            configuration = {
+                system.nixos.tags = [ "cachyos-dev" ];
+                
+                boot.kernelParams = [
+                    "nvidia-drm.modeset=1"
+                    "nvidia.NVreg_EnableGpuFirmware=1"
+                    "nvidia.NVreg_UsePageAttributeTable=1"
+                    "nvidia.NVreg_InitializeSystemMemoryAllocations=0"
+                    "amd_pstate=guided"
+
+                    # Development-specific parameters
+                    "debug"
+                    "ignore_loglevel"
+                    "dyndbg=+p"
+                    "kgdboc=kbd"
+                ];
+                
+                environment.systemPackages = systemPackages.list ++ [
+                    fallout-grub-theme
+                    pkgs.grub2_efi
+                    pkgs.gdb
+                    pkgs.strace
+                    pkgs.ltrace
+                    pkgs.perf-tools
+                    pkgs.kernelshark
+                    pkgs.trace-cmd
+                    pkgs.bpftrace
+                    pkgs.bcc
+                ];
+                
+                # Enable kernel debugging features
+                boot.kernel.sysctl = {
+                    "kernel.dmesg_restrict" = 0;
+                    "kernel.perf_event_paranoid" = -1;
+                    "kernel.kptr_restrict" = 0;
+                    "kernel.yama.ptrace_scope" = 0;
+                };
+            };
+        };
         
+       stable = {
+           configuration = {
+               
+               boot.kernelPackages = pkgs.linuxPackages_6_6;
+               boot.kernelParams = [
+                   "nvidia-drm.modeset=1"
+                   "nvidia.NVreg_EnableGpuFirmware=1"
+                   "nvidia.NVreg_UsePageAttributeTable=1"
+                   "nvidia.NVreg_InitializeSystemMemoryAllocations=0"
+                   "amd_pstate=guided"
+
+                   # Conservative parameters for maximum stability
+                   "quiet"
+                   "splash"
+                   "loglevel=3"
+               ];
+               
+               # chaotic.mesa-git.enable = false;
+           };
+       };
+    };
+	
+	boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos;
+	
+	boot.kernelParams = lib.mkDefault [
+	    "nvidia-drm.modeset=1"
+	    "nvidia.NVreg_EnableGpuFirmware=1"
+	    "nvidia.NVreg_UsePageAttributeTable=1"
+	    "nvidia.NVreg_InitializeSystemMemoryAllocations=0"
+		"amd_pstate=guided"
+
+        # Gaming Optimizations
+		"mitigations=off" 
+        "preempt=full"
+        "split_lock_detect=off"
+        "quiet"
+        "loglevel=3"
+	];
+
+	boot.extraModulePackages = [ ];
+	boot.blacklistedKernelModules = [ "snd_pcsp" ];
 	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
 	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+
         
 	# Enable LVM support
 	services.lvm.enable = true;
+
+	hardware.nvidia = {
+		package = config.boot.kernelPackages.nvidiaPackages.stable;
+		modesetting.enable = true;
+	};
+
+    # chaotic.mesa-git.enable = lib.mkDefault true;
 
 	hardware.graphics = {
 	  enable = true;
@@ -79,7 +202,10 @@ in
 	};
 
     # Packages
-	environment.systemPackages = systemPackages.list;
+	environment.systemPackages = systemPackages.list ++ [
+	    fallout-grub-theme
+		pkgs.grub2_efi
+	];
 
 	networking = {
 		networkmanager = {
