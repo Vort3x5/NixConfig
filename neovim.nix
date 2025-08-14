@@ -1,201 +1,98 @@
-{ config, pkgs, inputs, unstable, ...}:
+{ inputs, unstable, ... }:
 let
-  NeoSolarized = pkgs.vimUtils.buildVimPlugin {
-    name = "NeoSolarized";
-    src = inputs.NeoSolarized;
+  colorbuddy = unstable.vimUtils.buildVimPlugin {
+    name = "colorbuddy";
+    src = inputs.colorbuddy;
+  };
+  
+  neosolarized = unstable.vimUtils.buildVimPlugin {
+    name = "neosolarized";
+    src = inputs.neosolarized;
   };
 in
 {
-  programs.nvf = {
+  programs.neovim = {
     enable = true;
-    enableManpages = true;
-
-    settings = {
-      vim = {
-
-        viAlias = false;
-        vimAlias = true;
-        
-        options = {
-          number = true;
-          relativenumber = true;
-          cmdheight = 1;
-          hlsearch = true;
-          ignorecase = false;
-          showmode = false;
-          smartindent = true;
-          swapfile = false;
-          undofile = false;
-          shiftwidth = 4;
-          tabstop = 4;
-          cursorline = false;
-          numberwidth = 2;
-          wrap = false;
-          termguicolors = true;
-          background = "dark";
-          scrolloff = 8;
-          clipboard = "unnamedplus";
-        };
-
-        languages = {
-            enableTreesitter = true;
-            enableLSP = true;
-            enableFormat = true;
-            enableExtraDiagnostics = true;
-            nix.enable = true;
-            clang.enable = true;
-            python.enable = true;
-            lua.enable = true;
-            markdown.enable = true;
-        };
-
-        globals = {
-          mapleader = " ";
-        };
-
-        theme = {
-          enable = false;
-        };
-
-        telescope = {
-          enable = true;
-        };
-
-        filetree = {
-          neo-tree = {
-            enable = true;
-          };
-        };
-
-        statusline = {
-          lualine = {
-            enable = true;
-            theme = "solarized_dark";
-          };
-        };
-
-        git = {
-          gitsigns = {
-                  enable = true;
-          };
-        };
-
-        autocomplete = {
-          nvim-cmp = {
-            enable = true;
-            sources = {
-              nvim_lsp = "[LSP]";
-              buffer = "[Buffer]";
-              path = "[Path]";
-            };
-          };
-        };
-
-        snippets = {
-          luasnip = {
-            enable = true;
-          };
-        };
-
-        autopairs = {
-          nvim-autopairs = {
-            enable = true;
-          };
-        };
-
-        debugger = {
-          nvim-dap = {
-            enable = true;
-            ui = {
-              enable = true;
-            };
-          };
-        };
-
-        maps = {
-          normal = {
-            "<C-s>" = {
-              action = ":w<cr>";
-              desc = "Save file";
-            };
-            "<C-q>" = {
-              action = ":q<cr>";
-              desc = "Quit";
-            };
-
-            "<leader>pv" = {
-              action = ":Neotree toggle<cr>";
-              desc = "Toggle file tree";
-            };
-
-            "<leader>f" = {
-              action = ":Telescope find_files<cr>";
-              desc = "Find files";
-            };
-            "<leader>g" = {
-              action = ":Telescope live_grep<cr>";
-              desc = "Live grep";
-            };
-            "<leader>b" = {
-              action = ":Telescope buffers<cr>";
-              desc = "Find buffers";
-            };
-            "<leader>th" = {
-              action = ":Telescope help_tags<cr>";
-              desc = "Help tags";
-            };
-
-            "<leader>s" = {
-              action = ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>";
-              desc = "Search and replace current word";
-            };
-          };
-
-          insert = {
-            "<C-s>" = {
-              action = "<Esc>:w<cr>a";
-              desc = "Save file (insert)";
-            };
-          };
-        };
-
-        # Extra plugins - NeoSolarized and others
-        extraPlugins = {
-
-            nvim-treesitter = {
-                package = unstable.vimPlugins.nvim-treesitter;
-            };
-
-          neo-solarized = {
-            package = NeoSolarized;
-            setup = ''
-            vim.cmd.colorscheme("NeoSolarized");
-            '';
-          };
-
-          vim-surround = {
-            package = pkgs.vimPlugins.vim-surround;
-          };
-
-          vim-multiple-cursors = {
-            package = pkgs.vimPlugins.vim-multiple-cursors;
-          };
-
-          trouble = {
-            package = pkgs.vimPlugins.trouble-nvim;
-            setup = ''
-              require('trouble').setup({ icons = false })
-            '';
-          };
-
-          vim-easy-align = {
-            package = pkgs.vimPlugins.vim-easy-align;
-            setup = ''
-              vim.keymap.set({'n', 'x'}, 'ga', '<Plug>(EasyAlign)', { desc = 'Easy Align' })
-            '';
-          };
-        };
-      };
-    };
+    package = unstable.neovim-unwrapped;
+    vimAlias = true;
+    viAlias = false;
+    
+    plugins = with unstable.vimPlugins; [
+      plenary-nvim
+      nvim-web-devicons
+      
+      lualine-nvim
+      colorbuddy
+      neosolarized
+      
+      telescope-nvim
+      telescope-fzf-native-nvim
+      
+      (nvim-treesitter.withPlugins (p: with p; [
+        lua
+        nix
+        python
+        rust
+        c
+        cpp
+        bash
+        fish
+        sql
+        vim
+        go
+        wgsl
+        llvm
+      ]))
+      
+      gitsigns-nvim
+      
+      nvim-lspconfig
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp-buffer
+      cmp-path
+      cmp-cmdline
+      luasnip
+      cmp_luasnip
+      friendly-snippets
+      
+      vim-surround
+      vim-multiple-cursors
+      vim-easy-align
+      nvim-autopairs
+      
+      rust-vim
+      rust-tools-nvim
+      vim-llvm
+      
+      nvim-dap
+      nvim-dap-ui
+      
+      trouble-nvim
+    ];
+    
+    extraPackages = with unstable; [
+      lua-language-server
+      nil
+      clang-tools
+      python3Packages.python-lsp-server
+      rust-analyzer
+      
+      ripgrep
+      fd
+      
+      tree-sitter
+    ];
+    
+    extraConfig = "";
+  };
+  
+  xdg.configFile."nvim" = {
+    source = ./nvim;
+    recursive = true;
+  };
+  
+  home.sessionVariables = {
+    EDITOR = "nvim";
   };
 }

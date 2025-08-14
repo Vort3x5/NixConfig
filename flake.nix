@@ -18,18 +18,18 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		nvf = {
-			url = "github:notashelf/nvf";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		NeoSolarized = {
-			url = "github:Tsuzat/NeoSolarized.nvim";
+		neosolarized = {
+			url = "github:svrana/neosolarized.nvim";
 			flake = false;
 		};
+
+        colorbuddy = {
+            url = "github:tjdevries/colorbuddy.nvim";
+            flake = false;
+        };
 	};
 
-	outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, home-manager, nixos-hardware, sops-nix, nvf, ...}@inputs:
+    outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, home-manager, nixos-hardware, sops-nix, neosolarized, colorbuddy, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -53,6 +53,7 @@
 			    imports = [
 				    ./home.nix
 				    ./x11.nix
+				    ./neovim.nix
 				];
 			};
 			home-manager.extraSpecialArgs = { inherit inputs unstable; };
