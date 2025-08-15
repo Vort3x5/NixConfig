@@ -72,8 +72,8 @@ in
       "super + q" = "bspc quit";
       "super + r" = "bspc wm -r";
       
-      "super + shift + t" = "bspc node -t tiled";
-      "super + alt + t" = "bspc node -t pseudo_tiled";
+      "super + alt + t" = "bspc node -t tiled";
+      "super + alt + p" = "bspc node -t pseudo_tiled";
       "super + shift + s" = "bspc node -t floating";
       "super + f" = "bspc node -t fullscreen";
     };
