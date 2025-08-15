@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, layout ? "colemak", ... }: 
 {
 	home.stateVersion = "25.05";
 
@@ -173,7 +173,7 @@ set fish_greeting ""
 	};
 
 	home.activation.createLayoutFile = ''
-		echo "colemak" > "$HOME/.config/current-layout"
+		echo "${layout}" > "$HOME/.config/current-layout"
 	'';
 
     # Create directories using home.activation

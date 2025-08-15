@@ -4,13 +4,10 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-		chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
 
-		home-manager = {
-			url = "github:nix-community/home-manager/release-25.05";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
+		chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
 
 		nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
@@ -20,7 +17,7 @@
 		};
 	};
 
-    outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, home-manager, nixos-hardware, sops-nix, nixneovimplugins, ...}@inputs:
+    outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, nixos-hardware, sops-nix, nixneovimplugins, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -32,24 +29,9 @@
 	    ./vortex.nix
 
 		chaotic.nixosModules.default
-
 		sops-nix.nixosModules.sops
-
-		home-manager.nixosModules.home-manager
 		{
 			nixpkgs.overlays = [ nixneovimplugins.overlays.default ];
-
-			home-manager.useGlobalPkgs = true;
-			home-manager.useUserPackages = true;
-			home-manager.backupFileExtension = "backup";
-			home-manager.users.vortex = { config, pkgs, ... }: {
-			    imports = [
-				    ./home.nix
-				    ./x11.nix
-				    ./neovim.nix
-				];
-			};
-			home-manager.extraSpecialArgs = { inherit inputs unstable; };
 		}
 	];
 

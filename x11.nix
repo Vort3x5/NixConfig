@@ -1,8 +1,11 @@
-{ config, pkgs, ...}:
+{ pkgs, layout ? "colemak", ...}:
 {
+	imports = [
+		(import ./sxhkd.nix { inherit layout; })
+	];
+
 	home.file = {
 		".xinitrc".source = ./misc/.xinitrc;
-		".config/sxhkd/sxhkdrc".source = ./misc/sxhkdrc;
 	};
 
 	xdg.enable = true;
@@ -36,7 +39,7 @@
 		enable = true;
 		package = pkgs.polybar.override {
 			alsaSupport = true;
-			pulseSupport = true;
+			pipewireSupport = true;
 		};
 		config = {
 			"colors" = {
