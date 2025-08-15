@@ -27,7 +27,7 @@
       config.allowUnfree = true;
     };
 
-    keyboardLayout = "colemak";
+    keyboardLayout = pkgs.lib.trim (builtins.readFile /home/vortex/.config/layout);
     
     makeHomeConfig = layout: home-manager.lib.homeManagerConfiguration {
       inherit pkgs;

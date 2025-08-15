@@ -39,7 +39,6 @@
 		enable = true;
 		package = pkgs.polybar.override {
 			alsaSupport = true;
-			pipewireSupport = true;
 		};
 		config = {
 			"colors" = {

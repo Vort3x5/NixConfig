@@ -1,4 +1,4 @@
-{ config, pkgs, layout ? "colemak", ... }: 
+{ layout ? "colemak", ... }: 
 {
 	home.stateVersion = "25.05";
 
