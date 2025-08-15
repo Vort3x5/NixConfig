@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, layout ? "colemak", ... }:
 {
   programs.neovim = {
     enable = true;
@@ -73,10 +73,17 @@
     ];
   };
   
-  xdg.configFile."nvim" = {
-    source = ./nvim;
-    recursive = true;
-  };
+	xdg.configFile."nvim" = {
+		source = ./nvim;
+		recursive = true;
+
+		"./nvim/plugin/layout-keymaps.lua" = if layout == "colemak" then {
+			source = ./misc/colemak.lua;
+		}
+		else {
+			source = ./misc/qwerty.lua;
+		};
+	};
   
   home.sessionVariables = {
     EDITOR = "nvim";
