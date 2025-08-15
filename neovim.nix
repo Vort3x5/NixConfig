@@ -1,51 +1,34 @@
-{ inputs, unstable, ... }:
-let
-  colorbuddy = unstable.vimUtils.buildVimPlugin {
-    name = "colorbuddy";
-    src = inputs.colorbuddy;
-  };
-  
-  neosolarized = unstable.vimUtils.buildVimPlugin {
-    name = "neosolarized";
-    src = inputs.neosolarized;
-  };
-in
+{ pkgs, ... }:
 {
   programs.neovim = {
     enable = true;
-    package = unstable.neovim-unwrapped;
     vimAlias = true;
     viAlias = false;
     
-    plugins = with unstable.vimPlugins; [
+    plugins = (with pkgs.vimPlugins; [
+      # Core dependencies
       plenary-nvim
       nvim-web-devicons
       
+      # UI
       lualine-nvim
-      colorbuddy
-      neosolarized
       
+      # File navigation
       telescope-nvim
       telescope-fzf-native-nvim
+
+      # theme
+	  colorbuddy-nvim
       
+      # Treesitter
       (nvim-treesitter.withPlugins (p: with p; [
-        lua
-        nix
-        python
-        rust
-        c
-        cpp
-        bash
-        fish
-        sql
-        vim
-        go
-        wgsl
-        llvm
+        lua nix python rust c cpp bash fish sql vim go wgsl llvm
       ]))
       
+      # Git
       gitsigns-nvim
       
+      # LSP & Completion
       nvim-lspconfig
       nvim-cmp
       cmp-nvim-lsp
@@ -56,35 +39,35 @@ in
       cmp_luasnip
       friendly-snippets
       
+      # Editing
       vim-surround
       vim-multiple-cursors
       vim-easy-align
       nvim-autopairs
       
+      # Language specific
       rust-vim
-      rust-tools-nvim
+      rustaceanvim
       vim-llvm
       
+      # Debug & Diagnostics
       nvim-dap
       nvim-dap-ui
-      
       trouble-nvim
-    ];
+    ]) ++ [
+	  pkgs.vimExtraPlugins.neosolarized-nvim-svrana
+	];
     
-    extraPackages = with unstable; [
+    extraPackages = with pkgs; [
       lua-language-server
       nil
       clang-tools
       python3Packages.python-lsp-server
       rust-analyzer
-      
       ripgrep
       fd
-      
       tree-sitter
     ];
-    
-    extraConfig = "";
   };
   
   xdg.configFile."nvim" = {
