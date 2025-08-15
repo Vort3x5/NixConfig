@@ -17,12 +17,15 @@
       telescope-nvim
       telescope-fzf-native-nvim
 
-      # theme
+      # svrana/neosolarized requires this
 	  colorbuddy-nvim
       
       # Treesitter
       (nvim-treesitter.withPlugins (p: with p; [
-        lua nix python rust c cpp bash fish sql vim go wgsl llvm
+        lua nix python rust c cpp 
+		bash fish sql vim go 
+		wgsl llvm 
+		make yaml toml
       ]))
       
       # Git
