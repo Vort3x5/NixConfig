@@ -19,6 +19,9 @@ local options = {
 	scrolloff = 8,
 	clipboard = "unnamedplus",
 	syntax = "enable",
+	foldmethod = "marker",
+	foldmarker = "{{{,}}}",
+	foldlevel = 0,
 }
 
 for k, v in pairs(options) do

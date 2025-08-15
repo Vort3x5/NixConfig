@@ -1,5 +1,5 @@
--- COLORSCHEME SETUP (Neosolarized) {{{
-local function setup_colorscheme()
+-- colorscheme (neosolarized) {{{
+local function colorscheme()
   local status_cb, cb = pcall(require, 'colorbuddy.init')
   if not status_cb then
     vim.notify("colorbuddy not found, falling back to basic neosolarized", vim.log.levels.WARN)
@@ -37,54 +37,54 @@ local function setup_colorscheme()
 end
 -- }}}
 
--- TREESITTER SETUP (NixOS Compatible) {{{
-local function setup_treesitter()
+-- autopairs {{{
+local function autopairs()
+  local status, autopairs = pcall(require, 'nvim-autopairs')
+  if not status then return end
+
+  autopairs.setup({
+    check_ts = true,
+    map_cr = true,
+    map_bs = true,
+    enable_check_bracket_line = true,
+    break_undo = true,
+    enable_moveright = true,
+    enable_afterquote = true,
+    enable_bracket_in_quote = true,
+  })
+end
+-- }}}
+
+-- treesitter {{{
+local function treesitter()
   local status, configs = pcall(require, 'nvim-treesitter.configs')
   if not status then return end
 
   configs.setup {
-    -- CRITICAL: NixOS compatibility settings
-    ensure_installed = {}, -- Empty for NixOS - parsers managed by Nix
-    auto_install = false,  -- Disable auto-installation
-    sync_install = false,  -- Don't install parsers synchronously
-    
     highlight = {
       enable = true,
-      additional_vim_regex_highlighting = false,
     },
-    
     indent = {
       enable = true,
-    },
-    
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "gnn",
-        node_incremental = "grn",
-        scope_incremental = "grc",
-        node_decremental = "grm",
-      },
     },
   }
 end
 -- }}}
 
--- LSP SETUP {{{
-local function setup_lsp()
+-- LSP {{{
+local function lsp()
   local status, lspconfig = pcall(require, 'lspconfig')
   if not status then return end
 
-  -- Lua Language Server {{{
   lspconfig.lua_ls.setup({
     settings = {
       Lua = {
         runtime = {
           version = 'LuaJIT',
         },
-        diagnostics = {
-          globals = {'vim'},
-        },
+		diagnostics = {
+		  enable = false,
+		};
         workspace = {
           library = vim.api.nvim_get_runtime_file("", true),
           checkThirdParty = false,
@@ -95,14 +95,11 @@ local function setup_lsp()
       },
     },
   })
-  -- }}}
 
-  -- Other Language Servers {{{
-  lspconfig.nil_ls.setup({})      -- Nix
-  lspconfig.clangd.setup({})      -- C/C++
-  lspconfig.pylsp.setup({})       -- Python
+  lspconfig.nil_ls.setup({})
+  lspconfig.clangd.setup({})
+  lspconfig.pylsp.setup({})
 
-  -- Rust Analyzer
   lspconfig.rust_analyzer.setup({
     settings = {
       ['rust-analyzer'] = {
@@ -112,12 +109,11 @@ local function setup_lsp()
       },
     },
   })
-  -- }}}
 end
 -- }}}
 
--- COMPLETION SETUP (nvim-cmp) {{{
-local function setup_completion()
+-- nvim-cmp {{{
+local function completion()
   local status_cmp, cmp = pcall(require, 'cmp')
   if not status_cmp then return end
 
@@ -141,10 +137,12 @@ local function setup_completion()
       ['<S-Tab>'] = cmp.mapping.select_prev_item(),
     }),
     
-    sources = cmp.config.sources({
+    sources = cmp.config.sources(
+	{
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
-    }, {
+    }, 
+	{
       { name = 'buffer' },
       { name = 'path' },
     })
@@ -167,12 +165,17 @@ local function setup_completion()
       { name = 'buffer' }
     }
   })
+
+  local status_autopairs, cmp_autopairs = pcall(require, 'nvim-autopairs.completion.cmp')
+  if status_autopairs then
+    cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+  end
   -- }}}
 end
 -- }}}
 
--- TELESCOPE SETUP {{{
-local function setup_telescope()
+-- telescope {{{
+local function telescope()
   local status, telescope = pcall(require, 'telescope')
   if not status then return end
 
@@ -181,7 +184,6 @@ local function setup_telescope()
     defaults = {
       vimgrep_arguments = {
         'rg',
-        '--color=never',
         '--no-heading',
         '--with-filename',
         '--line-number',
@@ -197,25 +199,17 @@ local function setup_telescope()
     }
   }
   -- }}}
-
-  -- Telescope keymaps {{{
-  local builtin = require('telescope.builtin')
-  vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find files' })
-  vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep' })
-  vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find buffers' })
-  vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help tags' })
-  -- }}}
 end
 -- }}}
 
--- LUALINE SETUP (Status Line) {{{
-local function setup_lualine()
+-- lualine {{{
+local function lualine()
   local status, lualine = pcall(require, 'lualine')
   if not status then return end
 
   lualine.setup {
     options = {
-      icons_enabled = true,
+      icons_enabled = false,
       theme = 'solarized_dark',
       component_separators = { left = '', right = ''},
       section_separators = { left = '', right = ''},
@@ -256,48 +250,8 @@ local function setup_lualine()
 end
 -- }}}
 
--- AUTOPAIRS SETUP {{{
-local function setup_autopairs()
-  local status, autopairs = pcall(require, 'nvim-autopairs')
-  if not status then return end
-
-  -- Autopairs configuration {{{
-  autopairs.setup({
-    check_ts = true,                        -- Enable treesitter
-    ts_config = {
-      lua = {'string', 'source'},          -- Don't add pairs in lua string treesitter nodes
-      javascript = {'string', 'template_string'}, -- Don't add pairs in javscript template_string
-    },
-    disable_filetype = { "TelescopePrompt", "spectre_panel" },
-    fast_wrap = {
-      map = '<M-e>',
-      chars = { '{', '[', '(', '"', "'" },
-      pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
-      offset = 0, -- Offset from pattern match
-      end_key = '$',
-      keys = 'qwertyuiopzxcvbnmasdfghjkl',
-      check_comma = true,
-      highlight = 'PmenuSel',
-      highlight_grey = 'LineNr'
-    },
-  })
-  -- }}}
-
-  -- CMP integration {{{
-  local status_cmp, cmp = pcall(require, 'cmp')
-  if status_cmp then
-    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-    cmp.event:on(
-      'confirm_done',
-      cmp_autopairs.on_confirm_done()
-    )
-  end
-  -- }}}
-end
--- }}}
-
--- MULTIPLE CURSORS SETUP {{{
-local function setup_multicursor()
+-- multiple cursors {{{
+local function multicursor()
   -- Multiple cursor key mappings
   vim.g.multi_cursor_use_default_mapping = 0
   vim.g.multi_cursor_start_word_key = '<C-n>'
@@ -311,8 +265,8 @@ local function setup_multicursor()
 end
 -- }}}
 
--- TERMINAL CURSOR SETUP {{{
-local function setup_terminal_cursor()
+-- terminal cursor {{{
+local function terminal_cursor()
   vim.cmd[[
     augroup change_cursor
         au!
@@ -322,57 +276,14 @@ local function setup_terminal_cursor()
 end
 -- }}}
 
--- KEYMAPS AND GENERAL SETTINGS {{{
-local function setup_keymaps()
-  -- Set leader key
-  vim.g.mapleader = ' '
-  vim.g.maplocalleader = ' '
-
-  -- General keymaps {{{
-  vim.keymap.set('n', '<leader>e', vim.cmd.Ex, { desc = 'Open file explorer' })
-  -- }}}
-  
-  -- LSP keymaps (set up when LSP attaches) {{{
-  vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(event)
-      local opts = { buffer = event.buf }
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-      vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
-      vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_next, opts)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_prev, opts)
-      vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
-      vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
-      vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
-      vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
-    end
-  })
-  -- }}}
-
-  -- Fold keymaps {{{
-  vim.keymap.set('n', '<leader>za', 'za', { desc = 'Toggle fold' })
-  vim.keymap.set('n', '<leader>zM', 'zM', { desc = 'Close all folds' })
-  vim.keymap.set('n', '<leader>zR', 'zR', { desc = 'Open all folds' })
-  -- }}}
-end
--- }}}
-
--- MAIN SETUP FUNCTION {{{
-local function setup_all()
-  -- Setup in order of dependencies
-  setup_colorscheme()
-  setup_treesitter()
-  setup_lsp()
-  setup_completion()
-  setup_telescope()
-  setup_lualine()
-  setup_autopairs()
-  setup_multicursor()
-  setup_terminal_cursor()
-  setup_keymaps()
-end
-
--- Initialize everything
-setup_all()
+-- Setup All {{{
+colorscheme()
+autopairs()
+treesitter()
+lsp()
+completion()
+telescope()
+lualine()
+multicursor()
+terminal_cursor()
 -- }}}

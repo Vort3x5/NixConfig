@@ -45,7 +45,7 @@
         # Gaming
 		mangohud gamemode gamescope
 
-        # File manager (minimal)
+        # File manager
 		ranger
 
         # ZSA Moonlander tools

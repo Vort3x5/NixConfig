@@ -1,7 +1,8 @@
 -- NoPlug
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set('n', '<leader>e', vim.cmd.Ex, { desc = 'Open file explorer' })
 
 -- Save With "Ctrl + s" In Both Normal And Insert Mode
 vim.keymap.set("n", "<C-s>", ":w<CR>")
@@ -30,15 +31,34 @@ vim.keymap.set("x", "<leader>p", "\"_dP")
 -- replace current word in whole file
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
--- Plug
+-- Plugs {{{
 
--- Telescope
+-- Telescope {{{
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', telescope.find_files, {})
 vim.keymap.set('n', '<leader>g', telescope.live_grep, {})
-vim.keymap.set('n', '<leader>tb', telescope.buffers, {})
-vim.keymap.set('n', '<leader>th', telescope.help_tags, {})
+vim.keymap.set('n', '<leader>b', telescope.buffers, {})
+vim.keymap.set('n', '<leader>h', telescope.help_tags, {})
+-- }}}
 
--- vim-easy-align
+-- vim-easy-align {{{
 vim.api.nvim_set_keymap('x', 'ga', '<Plug>(EasyAlign)', { noremap = false, silent = true }) -- Visual mode
 vim.api.nvim_set_keymap('n', 'ga', '<Plug>(EasyAlign)', { noremap = false, silent = true }) -- Normal mode
+-- }}}
+
+-- LSP keymaps (set up when LSP attaches) {{{
+vim.api.nvim_create_autocmd('LspAttach', {
+callback = function(event)
+  local opts = { buffer = event.buf }
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
+  vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+  vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
+end
+})
+-- }}}
+-- }}}
