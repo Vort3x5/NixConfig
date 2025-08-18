@@ -75,10 +75,12 @@
   
 	xdg.configFile = {
 		"nvim/init.lua".source = ./nvim/init.lua;
+
 		"nvim/lua/plugs.lua".source = ./nvim/lua/plugs.lua;
 		"nvim/lua/options.lua".source = ./nvim/lua/options.lua;
 		"nvim/lua/keymaps.lua".source = ./nvim/lua/keymaps.lua;
 
+		"nvim/plugin/optimize.lua".source = ./nvim/plugin/optimize.lua;
 		"./nvim/plugin/layout-keymaps.lua" = if layout == "colemak" then {
 			source = ./misc/colemak.lua;
 		}
