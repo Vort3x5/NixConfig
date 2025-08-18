@@ -63,6 +63,7 @@ local function treesitter()
   configs.setup {
     highlight = {
       enable = true,
+	  additional_vim_regex_highlighting = false,
     },
     indent = {
       enable = true,
@@ -109,6 +110,9 @@ local function lsp()
       },
     },
   })
+	vim.fn.timer_start(1000 * 60 * 120, function()
+		vim.cmd("LspRestart")
+	end, {["repeat"] = -1})
 end
 -- }}}
 
@@ -219,11 +223,11 @@ local function lualine()
       },
       ignore_focus = {},
       always_divide_middle = true,
-      globalstatus = false,
+      globalstatus = true,
       refresh = {
-        statusline = 1000,
-        tabline = 1000,
-        winbar = 1000,
+        statusline = 200,
+        tabline = 200,
+        winbar = 200,
       }
     },
     sections = {
