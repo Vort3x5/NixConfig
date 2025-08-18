@@ -220,7 +220,8 @@ in
 		enable = true;
 		xkb = {
 			layout = "pl";
-			options = "compose:ralt";
+			model = "pc105";
+			options = "";
 		};
 		displayManager.startx.enable = true;
 		windowManager.bspwm.enable = true;
@@ -247,12 +248,13 @@ in
 			"en_US.UTF-8/UTF-8"
 			"pl_PL.UTF-8/UTF-8"
 		];
+		inputMethod.enable = false;
 	};
         
     # Console configuration
 	console = {
 		font = "Lat2-Terminus16";
-		keyMap = "pl";
+		useXkbConfig = true;
 	};
         
 	# Fonts
