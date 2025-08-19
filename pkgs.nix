@@ -33,7 +33,7 @@
 		git
 
         # Utils
-		wget curl 
+		wget curl jq
 		unzip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard
