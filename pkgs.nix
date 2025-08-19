@@ -39,6 +39,9 @@
 		wl-clipboard
 		wmname
 
+		# Containers
+		distrobox podman
+
         # Apps
 		firefox steam discord
 

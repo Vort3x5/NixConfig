@@ -25,11 +25,16 @@ in
 	# Users
 	users.users.vortex = {
 	  isNormalUser = true;
-	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" ];
+	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" ];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";
 	};
 	programs.fish.enable = true;
+
+	virtualisation.podman = {
+		enable = true;
+		dockerCompat = true;
+	};
 
 	nix = {
 		package = pkgs.nix;
