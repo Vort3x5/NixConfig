@@ -32,6 +32,7 @@
 			"bspc node -t floating"
 			"bspc node -g sticky"
 			"systemctl --user start polybar"
+			"systemctl --user restart picom"
 		];
 	};
 

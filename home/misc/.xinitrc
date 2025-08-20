@@ -43,7 +43,6 @@ xrandr --auto
 # Set Polish keyboard layout for X11
 setxkbmap -layout pl -option ""
 
-picom -f --backend xrender --vsync &
 emacs --daemon &
 feh --bg-fill --randomize ~/Desktop/Wallps
 sxhkd -m 1 &

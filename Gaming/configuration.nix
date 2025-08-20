@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
 	imports = [
 	  ./hardware-configuration.nix
@@ -50,10 +50,17 @@
 		};
     };
 
+	nixpkgs.overlays = [
+		(self: super: {
+			firefox = super.writeShellScriptBin "firefox" ''
+				export DRI_PRIME=1
+				export __NV_PRIME_RENDER_OFFLOAD=1
+				exec ${super.firefox}/bin/firefox "$@"
+			'';
+		})
+	];
+
 	environment.sessionVariables = {
-		DRI_PRIME = "1";
-		__NV_PRIME_RENDER_OFFLOAD = "1";
-		__GLX_VENDOR_LIBRARY_NAME = "nvidia";
 	};
         
 	# Host-machine specific packages
