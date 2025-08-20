@@ -83,9 +83,6 @@ local function lsp()
         runtime = {
           version = 'LuaJIT',
         },
-		diagnostics = {
-		  enable = false,
-		};
         workspace = {
           library = vim.api.nvim_get_runtime_file("", true),
           checkThirdParty = false,
@@ -96,6 +93,8 @@ local function lsp()
       },
     },
   })
+
+	vim.diagnostic.disable();
 
   lspconfig.nil_ls.setup({})
   lspconfig.clangd.setup({})

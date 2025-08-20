@@ -173,7 +173,7 @@ set fish_greeting ""
 	};
 
 	home.activation.createLayoutFile = ''
-		echo "${layout}" > "$HOME/.config/current-layout"
+		echo "${layout}" > "$HOME/.config/layout"
 	'';
 
     # Create directories using home.activation
