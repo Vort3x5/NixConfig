@@ -70,6 +70,7 @@ vim.keymap.set('n', '<leader>cr', ':Dispatch make clean && make<CR>', { desc = "
 vim.keymap.set('n', '<leader>cf', ':cfirst<CR>', { desc = "First error" })
 vim.keymap.set('n', '<leader>cl', ':clast<CR>', { desc = "Last error" })
 
+vim.keymap.set('n', ';e', ':cc<CR>', { desc = "Current error" })
 vim.keymap.set('n', ']e', ':cnext<CR>', { desc = "Next error" })
 vim.keymap.set('n', '[e', ':cprev<CR>', { desc = "Previous error" })
 

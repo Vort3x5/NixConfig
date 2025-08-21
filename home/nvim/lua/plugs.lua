@@ -207,6 +207,8 @@ end
 
 -- vim-dispatch {{{
 local function dispatch()
+	vim.g.dispatch_no_maps = 1
+
 	vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*",
     callback = function()
