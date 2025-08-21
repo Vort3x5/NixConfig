@@ -205,6 +205,31 @@ local function telescope()
 end
 -- }}}
 
+-- vim-dispatch {{{
+local function dispatch()
+	vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function()
+      if vim.fn.filereadable("Makefile") == 1 then
+        vim.opt.makeprg = "make"
+      elseif vim.fn.filereadable("CMakeLists.txt") == 1 then
+        vim.opt.makeprg = "cmake --build build"
+      end
+    end
+  })
+  
+  -- Auto-open quickfix on errors
+  vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    pattern = "make",
+    callback = function()
+      if #vim.fn.getqflist() > 0 then
+        vim.cmd("copen")
+      end
+    end
+  })
+end
+-- }}}
+
 -- lualine {{{
 local function lualine()
   local status, lualine = pcall(require, 'lualine')
@@ -286,6 +311,7 @@ treesitter()
 lsp()
 completion()
 telescope()
+dispatch()
 lualine()
 multicursor()
 terminal_cursor()

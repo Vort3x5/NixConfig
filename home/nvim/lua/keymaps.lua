@@ -61,4 +61,19 @@ callback = function(event)
 end
 })
 -- }}}
+
+-- compile-mode keymaps {{{
+vim.keymap.set('n', '<leader>cb', ':Make<CR>', { desc = "Compile" })
+vim.keymap.set('n', '<leader>cc', ':Make clean<CR>', { desc = "Clean" })
+vim.keymap.set('n', '<leader>cr', ':Dispatch make clean && make<CR>', { desc = "Recompile" })
+
+vim.keymap.set('n', '<leader>cf', ':cfirst<CR>', { desc = "First error" })
+vim.keymap.set('n', '<leader>cl', ':clast<CR>', { desc = "Last error" })
+
+vim.keymap.set('n', ']e', ':cnext<CR>', { desc = "Next error" })
+vim.keymap.set('n', '[e', ':cprev<CR>', { desc = "Previous error" })
+
+vim.keymap.set('n', '<leader>qf', ':copen<CR>', { desc = "Open compilation results" })
+vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { desc = "Close compilation results" })
+-- }}}
 -- }}}

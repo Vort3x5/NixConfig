@@ -17,6 +17,8 @@
       telescope-nvim
       telescope-fzf-native-nvim
 
+	  vim-dispatch
+
       # svrana/neosolarized requires this
 	  colorbuddy-nvim
       
