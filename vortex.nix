@@ -38,7 +38,18 @@ in
 
 	nix = {
 		package = pkgs.nix;
-		settings.experimental-features = [ "nix-command" "flakes" ];
+		settings = {
+			experimental-features = [ "nix-command" "flakes" ];
+			auto-optimise-store = true;
+			substituters = [
+				"https://cache.nixos.org/"
+				"https://drakon64-nixos-cachyos-kernel.cachix.org"
+			];
+			trusted-public-keys = [
+				"cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+				"drakon64-nixos-cachyos-kernel.cachix.org-1:J3gjZ9N6S05pyLA/P0M5y7jXpSxO/i0rshrieQJi5D0="
+			];
+		};
         
 		# keep only latest two nixos versions
 		gc = {
@@ -46,8 +57,9 @@ in
 			dates = "weekly";
 			options = "--delete-older-than 2d";
 		};
-		settings.auto-optimise-store = true;
 	};
+
+	boot.kernelPackages = lib.mkForce (with pkgs; linuxPackagesFor linuxPackages_cachyos);
 
     # Allow to reboot and poweroff without sudo
 	security.polkit.enable = true;
@@ -148,13 +160,9 @@ in
                    "splash"
                    "loglevel=3"
                ];
-               
-               # chaotic.mesa-git.enable = false;
            };
        };
     };
-	
-	boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos;
 	
 	boot.kernelParams = lib.mkDefault [
 	    "nvidia-drm.modeset=1"
@@ -173,7 +181,7 @@ in
 
 	boot.extraModulePackages = [ ];
 	boot.blacklistedKernelModules = [ "snd_pcsp" ];
-	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
+	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
         
@@ -184,8 +192,6 @@ in
 		package = config.boot.kernelPackages.nvidiaPackages.stable;
 		modesetting.enable = true;
 	};
-
-    # chaotic.mesa-git.enable = lib.mkDefault true;
 
 	hardware.graphics = {
 	  enable = true;

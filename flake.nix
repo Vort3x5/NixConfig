@@ -5,7 +5,7 @@
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-		chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+		nixos-cachyos-kernel.url = "github:drakon64/nixos-cachyos-kernel";
 
 		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
 
@@ -17,7 +17,7 @@
 		};
 	};
 
-    outputs = {self, nixpkgs, nixpkgs-unstable, chaotic, nixos-hardware, sops-nix, nixneovimplugins, ...}@inputs:
+    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, sops-nix, nixneovimplugins, nixos-cachyos-kernel, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -28,8 +28,9 @@
 	sharedModules = [
 	    ./vortex.nix
 
-		chaotic.nixosModules.default
 		sops-nix.nixosModules.sops
+		nixos-cachyos-kernel.nixosModules.default
+
 		{
 			nixpkgs.overlays = [ nixneovimplugins.overlays.default ];
 		}
