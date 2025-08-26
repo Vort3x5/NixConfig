@@ -41,14 +41,6 @@ in
 		settings = {
 			experimental-features = [ "nix-command" "flakes" ];
 			auto-optimise-store = true;
-			substituters = [
-				"https://cache.nixos.org/"
-				"https://drakon64-nixos-cachyos-kernel.cachix.org"
-			];
-			trusted-public-keys = [
-				"cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-				"drakon64-nixos-cachyos-kernel.cachix.org-1:J3gjZ9N6S05pyLA/P0M5y7jXpSxO/i0rshrieQJi5D0="
-			];
 		};
         
 		# keep only latest two nixos versions
@@ -59,7 +51,8 @@ in
 		};
 	};
 
-	boot.kernelPackages = lib.mkDefault (with pkgs; linuxPackagesFor linuxPackages_cachyos);
+	boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos;
+	system.modulesTree = [ (lib.getOutput "modules" config.boot.kernelPackages.kernel) ];
 
     # Allow to reboot and poweroff without sudo
 	security.polkit.enable = true;
