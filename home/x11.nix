@@ -4,21 +4,12 @@
 		(import ./sxhkd.nix { inherit layout; })
 	];
 
-	home.file = {
-		".xinitrc".source = ./misc/.xinitrc;
-	};
-
 	xdg.enable = true;
 
 	xsession.windowManager.bspwm = {
 		enable = true;
 		monitors = {
 			"primary" = [ "X" "X" "X" "X" "X" ];
-		};
-		rules = {
-			"Emacs" = {
-				state = "tiled";
-			};
 		};
 		settings = {
 			border_width = 0;
@@ -28,6 +19,18 @@
 			gapless_monocle = true;
 		};
 		startupPrograms = [
+			''systemctl --user set-environment DISPLAY="$DISPLAY"''
+			''systemctl --user set-environment PATH="/run/current-system/sw/bin:$PATH"''
+
+			''nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"''
+			"xrandr --setprovideroutputsource modesetting NVIDIA-0"
+			"xrandr --auto"
+
+			''setxkbmap -layout pl -option ""''
+
+			''sxhkd -m 1''
+			''unclutter --start-hidden --timeout=1''
+
 			"feh --bg-fill --randomize ~/Desktop/Wallps"
 			"bspc node -t floating"
 			"bspc node -g sticky"

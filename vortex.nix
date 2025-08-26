@@ -59,7 +59,7 @@ in
 		};
 	};
 
-	boot.kernelPackages = lib.mkForce (with pkgs; linuxPackagesFor linuxPackages_cachyos);
+	boot.kernelPackages = lib.mkDefault (with pkgs; linuxPackagesFor linuxPackages_cachyos);
 
     # Allow to reboot and poweroff without sudo
 	security.polkit.enable = true;
@@ -147,7 +147,7 @@ in
        stable = {
            configuration = {
                
-               boot.kernelPackages = pkgs.linuxPackages_6_6;
+               boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
                boot.kernelParams = [
                    "nvidia-drm.modeset=1"
                    "nvidia.NVreg_EnableGpuFirmware=1"
@@ -227,15 +227,31 @@ in
 	};
 
     # X11 services enable
-    services.xserver = {
-		enable = true;
-		xkb = {
-			layout = "pl";
-			model = "pc105";
-			options = "";
+    services = {
+		displayManager.defaultSession = "none+bspwm";
+		xserver = {
+			displayManager = {
+				lightdm = {
+					enable = true;
+
+					greeters.gtk = {
+						enable = true;
+
+						theme = {
+							package  = pkgs.arc-theme;
+							name  = "Arc-Dark";
+						};
+					};
+				};
+			};
+			enable = true;
+			xkb = {
+				layout = "pl";
+				model = "pc105";
+				options = "";
+			};
+			windowManager.bspwm.enable = true;
 		};
-		displayManager.startx.enable = true;
-		windowManager.bspwm.enable = true;
 	};
 
 	programs.steam = {
