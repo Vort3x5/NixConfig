@@ -18,6 +18,23 @@ let
             cp -r * $out/share/grub/themes/fallout/
         '';
 	};
+
+	infinity-sddm = pkgs.stdenv.mkDerivation {
+		pname = "infinity-sddm";
+		version = "1.0";
+		
+		src = pkgs.fetchFromGitHub {
+			owner = "L4ki";
+			repo = "Infinity-SDDM-Login-Themes";
+			rev = "master";
+			sha256 = "";
+		};
+		
+		installPhase = ''
+	    mkdir -p $out/share/sddm/themes/infinity
+		cp -r * $out/share/sddm/themes/infinity/
+		'';
+	};
 in
 {
 	system.stateVersion = "25.05";
@@ -223,24 +240,27 @@ in
 		wireless.enable = false;
 	};
 
-    # X11 services enable
-    services = {
-		displayManager.defaultSession = "none+bspwm";
-		xserver = {
-			displayManager = {
-				startx.enable = false;
-				sddm = {
-					enable = true;
-				};
-			};
-			enable = true;
-			xkb = {
-				layout = "pl";
-				model = "pc105";
-				options = "";
-			};
-			windowManager.bspwm.enable = true;
-			videoDrivers = [ "nvidia" ];
+    # X11 services
+	services.displayManager.sddm = {
+		enable = true;
+		wayland.enable = false;
+		theme = "infinity";
+	};
+
+    services.xserver = {
+		enable = true;
+		xkb = {
+			layout = "pl";
+			model = "pc105";
+			options = "";
+		};
+		windowManager.bspwm.enable = true;
+		displayManager = {
+			defaultSession = "none+bspwm";
+			startx.enable = false;
+			sessionPackages = [
+				((pkgs.writeShellScriptBin "bspwm-session" (builtins.readFile ./home/misc/bspwm-session.sh)))
+			];
 		};
 	};
 
