@@ -258,10 +258,13 @@ in
 		displayManager = {
 			defaultSession = "none+bspwm";
 			startx.enable = false;
-			sessionPackages = [
-				((pkgs.writeShellScriptBin "bspwm-session" (builtins.readFile ./home/misc/bspwm-session.sh)))
-			];
 		};
+	};
+
+	environment.etc."xdg/sessions/bspwm.desktop".source = ./home/misc/bspwm.desktop;
+	environment.etc."xdg/sessions/bspwm-session" = {
+		source = ./home/misc/bspwm-session.sh;
+		mode = "0755";
 	};
 
 	programs.steam = {

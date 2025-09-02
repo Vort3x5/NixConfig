@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=bspwm
+Exec=/etc/xdg/sessions/bspwm-session
+Type=Application
