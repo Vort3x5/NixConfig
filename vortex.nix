@@ -177,6 +177,10 @@ in
 	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
+	boot.extraModprobeConfig = ''
+		options snd-hda-intel model=headset-mode
+	'';
+
         
 	# Enable LVM support
 	services.lvm.enable = true;
@@ -224,17 +228,9 @@ in
 		displayManager.defaultSession = "none+bspwm";
 		xserver = {
 			displayManager = {
-				lightdm = {
+				startx.enable = false;
+				sddm = {
 					enable = true;
-
-					greeters.gtk = {
-						enable = true;
-
-						theme = {
-							package  = pkgs.arc-theme;
-							name  = "Arc-Dark";
-						};
-					};
 				};
 			};
 			enable = true;
@@ -244,6 +240,7 @@ in
 				options = "";
 			};
 			windowManager.bspwm.enable = true;
+			videoDrivers = [ "nvidia" ];
 		};
 	};
 
