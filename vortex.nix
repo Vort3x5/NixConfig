@@ -27,12 +27,12 @@ let
 			owner = "L4ki";
 			repo = "Infinity-SDDM-Login-Themes";
 			rev = "master";
-			sha256 = "";
+			sha256 = "sha256-jypuoft2fJGNI+MkF6PIUCZ/m36fdG9xaq2LH1G+m+Y=";
 		};
 		
 		installPhase = ''
-	    mkdir -p $out/share/sddm/themes/infinity
-		cp -r * $out/share/sddm/themes/infinity/
+	    mkdir -p $out/share/sddm/themes
+		cp -r * $out/share/sddm/themes/
 		'';
 	};
 in
@@ -133,6 +133,7 @@ in
                 
                 environment.systemPackages = systemPackages.list ++ [
                     fallout-grub-theme
+					infinity-sddm
                     pkgs.grub2_efi
                     pkgs.gdb
                     pkgs.strace
@@ -224,6 +225,7 @@ in
 			support32Bit = true;
 		};
 		pulse.enable = true;
+		jack.enable = true;
 	};
 
     # Packages
@@ -241,10 +243,13 @@ in
 	};
 
     # X11 services
-	services.displayManager.sddm = {
-		enable = true;
-		wayland.enable = false;
-		theme = "infinity";
+	services.displayManager = {
+		defaultSession = "none+bspwm";
+		sddm = {
+			enable = true;
+			wayland.enable = false;
+			theme = "infinity";
+		};
 	};
 
     services.xserver = {
@@ -256,7 +261,6 @@ in
 		};
 		windowManager.bspwm.enable = true;
 		displayManager = {
-			defaultSession = "none+bspwm";
 			startx.enable = false;
 		};
 	};
