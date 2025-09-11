@@ -25,16 +25,20 @@ let
 	 	
 	 	src = ./home/misc/Infinity-SDDM.tar.gz;
 
-	 	sourceRoot = ".";
+		sourceRoot = "Infinity-SDDM";
+    
+		installPhase = ''
+			mkdir -p $out/share/sddm/themes/infinity
+			cp -r * $out/share/sddm/themes/infinity/
 
-	 	
-	 	installPhase = ''
-	    mkdir -p $out/share/sddm/themes/infinity
-	 	cp -r * $out/share/sddm/themes/infinity/
-
-		${pkgs.gnused}/bin/sed -i '/QtVersion/d' $out/share/sddm/themes/infinity/metadata.desktop
-	 	chmod -R 755 $out/share/sddm/themes/infinity/
-	 	'';
+			if [ -f $out/share/sddm/themes/infinity/metadata.desktop ]; then
+				${pkgs.gnused}/bin/sed -i '/QtVersion/d' $out/share/sddm/themes/infinity/metadata.desktop
+			fi
+			
+			cp ${./home/misc/metadata.desktop} $out/share/sddm/themes/infinity/metadata.desktop
+			
+			chmod -R 755 $out/share/sddm/themes/infinity/
+		'';
 	 };
 
 	nativeBuildInputs = with pkgs; [ gnutar gnused ];
@@ -134,20 +138,6 @@ in
                     "kgdboc=kbd"
                 ];
                 
-                environment.systemPackages = systemPackages.list ++ [
-                    fallout-grub-theme
-					infinity-sddm
-                    pkgs.grub2_efi
-                    pkgs.gdb
-                    pkgs.strace
-                    pkgs.ltrace
-                    pkgs.perf-tools
-                    pkgs.kernelshark
-                    pkgs.trace-cmd
-                    pkgs.bpftrace
-                    pkgs.bcc
-                ];
-                
                 # Enable kernel debugging features
                 boot.kernel.sysctl = {
                     "kernel.dmesg_restrict" = 0;
@@ -234,6 +224,7 @@ in
     # Packages
 	environment.systemPackages = systemPackages.list ++ [
 	    fallout-grub-theme
+		infinity-sddm
 		pkgs.grub2_efi
 	];
 
@@ -272,10 +263,6 @@ in
 	environment.etc = { 
 		"xdg/sessions/bspwm-session" = {
 			source = ./home/misc/bspwm-session.sh;
-			mode = "0755";
-		}; 
-		"$out/share/sddm/themes/infinity/metadata.desktop" = {
-			source = ./home/misc/metadata.desktop;
 			mode = "0755";
 		}; 
 	};

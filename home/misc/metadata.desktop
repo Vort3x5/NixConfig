@@ -3,4 +3,3 @@ Name=Infinity
 Screenshot=screenshot.png
 MainScript=Main.qml
 ConfigFile=theme.conf
-QtVersion=6
