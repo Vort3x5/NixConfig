@@ -226,6 +226,14 @@ in
 	    fallout-grub-theme
 		infinity-sddm
 		pkgs.grub2_efi
+
+		pkgs.libsForQt5.plasma-framework
+		pkgs.libsForQt5.plasma-workspace
+		pkgs.libsForQt5.qtquickcontrols2
+		pkgs.libsForQt5.qtgraphicaleffects
+		pkgs.libsForQt5.qtsvg
+		pkgs.libsForQt5.kservice
+		pkgs.libsForQt5.kdeclarative
 	];
 
 	networking = {
