@@ -20,21 +20,19 @@ let
 	};
 
 	infinity-sddm = pkgs.stdenv.mkDerivation {
-		pname = "infinity-sddm";
-		version = "1.0";
-		
-		src = pkgs.fetchFromGitHub {
-			owner = "L4ki";
-			repo = "Infinity-SDDM-Login-Themes";
-			rev = "master";
-			sha256 = "sha256-jypuoft2fJGNI+MkF6PIUCZ/m36fdG9xaq2LH1G+m+Y=";
-		};
-		
-		installPhase = ''
+	 	pname = "infinity-sddm";
+	 	version = "1.0";
+	 	
+	 	src = ./home/misc/Iinfinity-sddm.tar.gz;
+
+	 	sourceRoot = ".";
+	 	
+	 	installPhase = ''
 	    mkdir -p $out/share/sddm/themes
-		cp -r * $out/share/sddm/themes/
-		'';
-	};
+	 	cp -r * $out/share/sddm/themes/
+	 	chmod -R 755 $out/share/sddm/themes/
+	 	'';
+	 };
 in
 {
 	system.stateVersion = "25.05";
