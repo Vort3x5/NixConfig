@@ -23,16 +23,21 @@ let
 	 	pname = "infinity-sddm";
 	 	version = "1.0";
 	 	
-	 	src = ./home/misc/Iinfinity-sddm.tar.gz;
+	 	src = ./home/misc/Infinity-SDDM.tar.gz;
 
 	 	sourceRoot = ".";
+
 	 	
 	 	installPhase = ''
-	    mkdir -p $out/share/sddm/themes
-	 	cp -r * $out/share/sddm/themes/
-	 	chmod -R 755 $out/share/sddm/themes/
+	    mkdir -p $out/share/sddm/themes/infinity
+	 	cp -r * $out/share/sddm/themes/infinity/
+
+		${pkgs.gnused}/bin/sed -i '/QtVersion/d' $out/share/sddm/themes/infinity/metadata.desktop
+	 	chmod -R 755 $out/share/sddm/themes/infinity/
 	 	'';
 	 };
+
+	nativeBuildInputs = with pkgs; [ gnutar gnused ];
 in
 {
 	system.stateVersion = "25.05";
@@ -264,9 +269,15 @@ in
 	};
 
 	environment.etc."xdg/sessions/bspwm.desktop".source = ./home/misc/bspwm.desktop;
-	environment.etc."xdg/sessions/bspwm-session" = {
-		source = ./home/misc/bspwm-session.sh;
-		mode = "0755";
+	environment.etc = { 
+		"xdg/sessions/bspwm-session" = {
+			source = ./home/misc/bspwm-session.sh;
+			mode = "0755";
+		}; 
+		"$out/share/sddm/themes/infinity/metadata.desktop" = {
+			source = ./home/misc/metadata.desktop;
+			mode = "0755";
+		}; 
 	};
 
 	programs.steam = {
