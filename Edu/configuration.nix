@@ -1,7 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, modulesPath, ... }:
 {
 	imports = [
 	  ./hardware-configuration.nix
+	  "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
 	];
 
 	fileSystems."/" = {

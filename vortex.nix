@@ -91,9 +91,9 @@ in
 	  '';
 
 	  boot.loader = {
-        systemd-boot.enable = false;
+        systemd-boot.enable = lib.mkDefault false;
         grub = {
-            enable = true;
+            enable = lib.mkDefault true;
             device = "nodev";
             efiSupport = true;
             useOSProber = true;
@@ -116,7 +116,7 @@ in
                 # "NixOS - stable-fallback" - Linux Stable Kernel (maximum compatibility)
             '';
         };
-        efi.canTouchEfiVariables = true;
+        efi.canTouchEfiVariables = lib.mkDefault true;
     };
 
 	specialisation = {
@@ -173,8 +173,6 @@ in
 
 	boot.extraModulePackages = [ ];
 	boot.blacklistedKernelModules = [ "snd_pcsp" ];
-	boot.initrd.kernelModules = [  "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
-	boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
 	boot.extraModprobeConfig = ''
 		options snd-hda-intel model=headset-mode
