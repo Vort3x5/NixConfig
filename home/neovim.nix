@@ -26,7 +26,7 @@
       (nvim-treesitter.withPlugins (p: with p; [
         lua nix python rust c cpp 
 		bash fish sql vim go 
-		wgsl llvm 
+		wgsl llvm
 		make yaml toml
       ]))
       
