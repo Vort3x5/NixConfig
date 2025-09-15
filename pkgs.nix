@@ -19,7 +19,7 @@
 		alacritty fish
 
         # Editor
-		neovim vim emacs
+		neovim vim emacs zathura
 
         # X11
 		bspwm sxhkd polybar rofi
@@ -29,7 +29,7 @@
 
         # Development
 		gcc gnumake
-		python3 lua
+		python3 lua fasm
 		git
 
         # Utils

@@ -66,6 +66,6 @@
 			];
 		};
 
-		packages.x86_64-linux.iso = self.nixosConfigurations.TUF.config.system.build.isoImage;
+		packages.x86_64-linux.iso = self.nixosConfigurations.Edu.config.system.build.isoImage;
 	};
 }
