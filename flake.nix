@@ -15,14 +15,9 @@
 			url = "github:Mic92/sops-nix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-
-		disko = {
-			url = "github:nix-community/disko";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
 	};
 
-    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, chaotic, sops-nix, nixneovimplugins, ...}@inputs:
+    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, chaotic, sops-nix, nixneovimplugins, disko, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {
@@ -66,7 +61,6 @@
 			];
 
 			Edu = mkSystem "Edu" [
-				./Edu/disk.nix
 				./Edu/hardware-configuration.nix
 				./Edu/configuration.nix
 			];
