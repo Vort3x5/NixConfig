@@ -15,6 +15,11 @@
 			url = "github:Mic92/sops-nix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
+		disko = {
+			url = "github:nix-community/disko";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
     outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, chaotic, sops-nix, nixneovimplugins, ...}@inputs:
@@ -61,11 +66,10 @@
 			];
 
 			Edu = mkSystem "Edu" [
+				./Edu/disk.nix
 				./Edu/hardware-configuration.nix
 				./Edu/configuration.nix
 			];
 		};
-
-		packages.x86_64-linux.iso = self.nixosConfigurations.Edu.config.system.build.isoImage;
 	};
 }
