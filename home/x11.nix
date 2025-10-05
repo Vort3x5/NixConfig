@@ -18,25 +18,25 @@
 			borderless_monocle =  true;
 			gapless_monocle = true;
 		};
-		#	startupPrograms = [
-		#		''systemctl --user set-environment DISPLAY="$DISPLAY"''
-		#		''systemctl --user set-environment PATH="/run/current-system/sw/bin:$PATH"''
-		#
-		#		''nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"''
-		#		"xrandr --setprovideroutputsource modesetting NVIDIA-0"
-		#		"xrandr --auto"
-		#
-		#		''setxkbmap -layout pl -option ""''
-		#
-		#		''sxhkd -m 1''
-		#		''unclutter --start-hidden --timeout=1''
-		#
-		#		"feh --bg-fill --randomize ~/Desktop/Wallps"
-		#		"bspc node -t floating"
-		#		"bspc node -g sticky"
-		#		"systemctl --user start polybar"
-		#		"systemctl --user restart picom"
-		#	];
+		startupPrograms = [
+			''systemctl --user set-environment DISPLAY="$DISPLAY"''
+			''systemctl --user set-environment PATH="/run/current-system/sw/bin:$PATH"''
+	
+			''nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"''
+			"xrandr --setprovideroutputsource modesetting NVIDIA-0"
+			"xrandr --auto"
+	
+			''setxkbmap -layout pl -option ""''
+	
+			''sxhkd -m 1''
+			''unclutter --start-hidden --timeout=1''
+	
+			"feh --bg-fill --randomize /etc/nixos/home/misc/Wallps"
+			"bspc node -t floating"
+			"bspc node -g sticky"
+			"systemctl --user start polybar"
+			"systemctl --user restart picom"
+		];
 	};
 
 	services.polybar = {
