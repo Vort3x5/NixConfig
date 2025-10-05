@@ -26,7 +26,7 @@
 		"vm.dirty_ratio" = 15;
 	};
 
-	boot.supportedFilesystems.zfs = lib.mkForce false;
+	boot.supportedFilesystems = lib.mkForce [ "vfat" "ext4" ];
 
 	# Laptop-specific power management
 	services.tlp = {
