@@ -12,8 +12,7 @@ xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
 
 picom -f --backend glx &
-emacs --daemon &
-feh --bg-fill --randomize ~/Desktop/Wallps
+feh --bg-fill --randomize /etc/nixos/home/misc/Wallps
 sxhkd -m 1 &
 unclutter --start-hidden --timeout=1 &
 exec bspwm
