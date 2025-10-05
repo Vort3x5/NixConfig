@@ -31,6 +31,9 @@
 	boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
 	boot.supportedFilesystems = lib.mkForce [ "vfat" "ext4" ];
 
+	services.xserver.displayManager.startx.enable = lib.mkForce true;
+	services.displayManager.sddm.enable = lib.mkForce false;
+
 	# Laptop-specific power management
 	services.tlp = {
 		enable = true;
