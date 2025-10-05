@@ -26,6 +26,8 @@
 		"vm.dirty_ratio" = 15;
 	};
 
+	boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
+
 	boot.supportedFilesystems = lib.mkForce [ "vfat" "ext4" ];
 
 	# Laptop-specific power management
