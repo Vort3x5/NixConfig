@@ -17,7 +17,7 @@
 		};
 	};
 
-    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, chaotic, sops-nix, nixneovimplugins, disko, ...}@inputs:
+    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, chaotic, sops-nix, nixneovimplugins, ...}@inputs:
 	let
 
     unstable = import nixpkgs-unstable {

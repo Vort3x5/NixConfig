@@ -2,7 +2,6 @@
 {
 	imports = [
 	  ./hardware-configuration.nix
-	  "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
 	];
 
 	fileSystems."/" = {
@@ -26,6 +25,8 @@
 		"vm.vfs_cache_pressure" = 50;
 		"vm.dirty_ratio" = 15;
 	};
+
+	boot.supportedFilesystems.zfs = lib.mkForce false;
 
 	# Laptop-specific power management
 	services.tlp = {
