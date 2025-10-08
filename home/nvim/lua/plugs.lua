@@ -70,7 +70,6 @@ local function treesitter()
     },
   }
 	vim.treesitter.language.register('jai', 'jai')
-	vim.treesitter.start()
 end
 -- }}}
 
