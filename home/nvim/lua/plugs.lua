@@ -69,6 +69,8 @@ local function treesitter()
       enable = true,
     },
   }
+	vim.treesitter.language.register('jai', 'jai')
+	vim.treesitter.start()
 end
 -- }}}
 
@@ -313,10 +315,6 @@ local function jai()
 			jai = 'jai',
 		},
 	})
-	local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-	parser_config.jai = {
-		filetype = 'jai',
-	}
 end
 -- }}}
 

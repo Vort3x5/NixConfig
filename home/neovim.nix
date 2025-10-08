@@ -3,7 +3,7 @@ let
 	tree-sitter-jai = pkgs.tree-sitter.buildGrammar {
 		language = "jai";
 		version = "1.0.0";
-		src = pkgs.lib.cleanSource nvim/plugin/tree-sitter-jai;
+		src = ./nvim/plugin/tree-sitter-jai;
 	};
 in
 {
