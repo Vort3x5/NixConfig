@@ -1,4 +1,11 @@
 { pkgs, layout ? "colemak", ... }:
+let
+	tree-sitter-jai = pkgs.tree-sitter.buildGrammar {
+		language = "jai";
+		version = "1.0.0";
+		src = pkgs.lib.cleanSource nvim/plugin/tree-sitter-jai;
+	};
+in
 {
   programs.neovim = {
     enable = true;
@@ -21,14 +28,15 @@
 
       # svrana/neosolarized requires this
 	  colorbuddy-nvim
+	  
       
       # Treesitter
       (nvim-treesitter.withPlugins (p: with p; [
         lua nix python rust c cpp 
-		bash fish sql vim go 
+		bash fish sql vim go
 		wgsl llvm
 		make yaml toml
-      ]))
+      ] ++ [ tree-sitter-jai ]))
       
       # Git
       gitsigns-nvim
@@ -59,6 +67,7 @@
       nvim-dap
       nvim-dap-ui
       trouble-nvim
+
     ]) ++ [
 	  pkgs.vimExtraPlugins.neosolarized-nvim-svrana
 	];

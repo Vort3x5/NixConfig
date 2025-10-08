@@ -306,6 +306,20 @@ local function terminal_cursor()
 end
 -- }}}
 
+-- Jai {{{
+local function jai()
+	vim.filetype.add({
+		extension = {
+			jai = 'jai',
+		},
+	})
+	local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+	parser_config.jai = {
+		filetype = 'jai',
+	}
+end
+-- }}}
+
 -- Setup All {{{
 colorscheme()
 autopairs()
@@ -317,4 +331,5 @@ dispatch()
 lualine()
 multicursor()
 terminal_cursor()
+jai()
 -- }}}
