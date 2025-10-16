@@ -28,7 +28,7 @@
 		xclip
 
         # Development
-		gcc gnumake
+		gcc gnumake gdb
 		python3 lua fasm
 		git
 
