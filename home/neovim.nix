@@ -32,10 +32,9 @@ in
       
       # Treesitter
       (nvim-treesitter.withPlugins (p: with p; [
-        lua nix python rust c cpp java
-		bash fish sql vim go
+        lua nix python rust c cpp java matlab go
+		bash fish sql vim make yaml toml
 		wgsl llvm
-		make yaml toml
       ] ++ [ tree-sitter-jai ]))
       
       # Git
