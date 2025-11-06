@@ -54,12 +54,12 @@
 				alert = "#A54242";
 				disabled = "#707880";
 			};
-			"bar/Statbar" = {
-				width = "98%";
+			"bar/Left" = {
+				width = "10%";
 				offset-x = "1%";
 				height = "24pt";
-				radius = 8;
-				fixed-center = true;
+				radius = "12";
+				fixed-center = false;
 
 				background = "\${colors.background}";
 				foreground = "\${colors.foreground}";
@@ -78,12 +78,67 @@
 				font-0 = "Terminus:pixelsize=25;1";
 
 				modules-left = "xworkspaces";
-				modules-center = "date";
-				modules-right = "cpu wlan";
 
 				cursor-click = "pointer";
 				cursor-scroll = "ns-resize";
 				enable-ipc = true;
+				tray-position = "none";
+			};
+			"bar/Center" = {
+				width = "14%";
+				offset-x = "43%";
+				height = "24pt";
+				radius = "12";
+				fixed-center = true;
+
+				background = "\${colors.background}";
+				foreground = "\${colors.foreground}";
+
+				line-size = "3pt";
+				border-size = "4pt";
+				border-color = "#00000000";
+
+				padding-left = 0;
+				padding-right = 1;
+				module-margin = 1;
+
+				separator = "|";
+				separator-foreground = "\${colors.disabled}";
+
+				font-0 = "Terminus:pixelsize=25;1";
+
+				modules-center = "date";
+
+				enable-ipc = true;
+				tray-position = "none";
+			};
+			"bar/Right" = {
+				width = "15%";
+				offset-x = "84%";
+				height = "24pt";
+				radius = "12";
+				fixed-center = true;
+
+				background = "\${colors.background}";
+				foreground = "\${colors.foreground}";
+
+				line-size = "3pt";
+				border-size = "4pt";
+				border-color = "#00000000";
+
+				padding-left = 0;
+				padding-right = 1;
+				module-margin = 1;
+
+				separator = "|";
+				separator-foreground = "\${colors.disabled}";
+
+				font-0 = "Terminus:pixelsize=25;1";
+
+				modules-center = "cpu wlan";
+
+				enable-ipc = true;
+				tray-position = "right";
 			};
 			"module/xworkspaces" = {
 				type = "internal/xworkspaces";
@@ -131,7 +186,9 @@
         # systemctl --user start polybar will launch this:
 		script = ''
 			killall -q polybar
-			polybar Statbar 2>&1 | tee -a /tmp/polybar.log & disown
+			polybar Left 2>&1 | tee -a /tmp/polybar.log & disown
+			polybar Center 2>&1 | tee -a /tmp/polybar.log & disown
+			polybar Right 2>&1 | tee -a /tmp/polybar.log & disown
 		'';
 	};
 }
