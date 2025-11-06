@@ -17,6 +17,7 @@
 			split_ratio =  0.57;
 			borderless_monocle =  true;
 			gapless_monocle = true;
+			top_padding = 30;
 		};
 		startupPrograms = [
 			''systemctl --user set-environment DISPLAY="$DISPLAY"''
@@ -57,7 +58,7 @@
 			"bar/Left" = {
 				width = "10%";
 				offset-x = "1%";
-				height = "24pt";
+				height = "25pt";
 				radius = "12";
 				fixed-center = false;
 
@@ -83,11 +84,14 @@
 				cursor-scroll = "ns-resize";
 				enable-ipc = true;
 				tray-position = "none";
+				
+				# for gap defined in bspwm
+				override-redirect = true;
 			};
 			"bar/Center" = {
 				width = "14%";
 				offset-x = "43%";
-				height = "24pt";
+				height = "25pt";
 				radius = "12";
 				fixed-center = true;
 
@@ -111,11 +115,12 @@
 
 				enable-ipc = true;
 				tray-position = "none";
+				override-redirect = true;
 			};
 			"bar/Right" = {
 				width = "15%";
 				offset-x = "84%";
-				height = "24pt";
+				height = "25pt";
 				radius = "12";
 				fixed-center = true;
 
@@ -139,6 +144,7 @@
 
 				enable-ipc = true;
 				tray-position = "right";
+				override-redirect = true;
 			};
 			"module/xworkspaces" = {
 				type = "internal/xworkspaces";
