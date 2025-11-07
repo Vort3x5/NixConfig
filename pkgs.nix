@@ -26,6 +26,7 @@
 		picom feh
 		xorg.xinit xorg.xrandr xorg.xsetroot xorg.xprop
 		xclip
+		arandr
 
         # Development
 		gcc gnumake gdb
