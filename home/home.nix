@@ -40,6 +40,9 @@ Host *
 			off = "shutdown -h now";
 			pause = "systemctl suspend";
 		};
+		shellInit = ''
+fish_add_path $HOME/.local/bin
+		'';
 		interactiveShellInit = ''
 bind \t forward-word
 bind \cz complete
