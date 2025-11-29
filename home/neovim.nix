@@ -19,6 +19,9 @@ in
       
       # UI
       lualine-nvim
+
+	  copilot-vim
+	  CopilotChat-nvim
       
       # File navigation
       telescope-nvim

@@ -22,6 +22,8 @@ local options = {
 	foldmethod = "marker",
 	foldmarker = "{{{,}}}",
 	foldlevel = 0,
+	splitbelow = true,
+	splitright = true,
 }
 
 for k, v in pairs(options) do

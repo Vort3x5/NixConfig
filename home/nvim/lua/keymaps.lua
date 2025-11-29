@@ -63,12 +63,12 @@ end
 -- }}}
 
 -- compile-mode keymaps {{{
-vim.keymap.set('n', '<leader>cb', ':Make<CR>', { desc = "Compile" })
-vim.keymap.set('n', '<leader>cc', ':Make clean<CR>', { desc = "Clean" })
-vim.keymap.set('n', '<leader>cr', ':Dispatch make clean && make<CR>', { desc = "Recompile" })
+vim.keymap.set('n', '<leader>m', ':Make<CR>', { desc = "Compile" })
+vim.keymap.set('n', '<leader>mc', ':Make clean<CR>', { desc = "Clean" })
+vim.keymap.set('n', '<leader>mr', ':Dispatch make clean && make<CR>', { desc = "Recompile" })
 
-vim.keymap.set('n', '<leader>cf', ':cfirst<CR>', { desc = "First error" })
-vim.keymap.set('n', '<leader>cl', ':clast<CR>', { desc = "Last error" })
+vim.keymap.set('n', '<leader>ef', ':cfirst<CR>', { desc = "First error" })
+vim.keymap.set('n', '<leader>el', ':clast<CR>', { desc = "Last error" })
 
 vim.keymap.set('n', ';e', ':cc<CR>', { desc = "Current error" })
 vim.keymap.set('n', ']e', ':cnext<CR>', { desc = "Next error" })
@@ -76,5 +76,12 @@ vim.keymap.set('n', '[e', ':cprev<CR>', { desc = "Previous error" })
 
 vim.keymap.set('n', '<leader>qf', ':copen<CR>', { desc = "Open compilation results" })
 vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { desc = "Close compilation results" })
+-- }}}
+
+-- Copilot {{{
+vim.keymap.set('n', '<leader>cm', ':CopilotChatModels<CR>', { desc = 'Select Copilot Model' })
+vim.keymap.set({'n', 'v'}, '<leader>ce', ':CopilotChatExplain<CR>', { desc = 'Explain code' })
+vim.keymap.set({'n', 'v'}, '<leader>cf', ':CopilotChatFix<CR>', { desc = 'Fix code' })
+vim.keymap.set({'n', 'v'}, '<leader>co', ':CopilotChatOptimize<CR>', { desc = 'Optimize code' })
 -- }}}
 -- }}}

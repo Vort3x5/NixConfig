@@ -143,6 +143,7 @@ local function completion()
     
     sources = cmp.config.sources(
 	{
+      { name = 'copilot' },
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
     }, 
@@ -177,6 +178,25 @@ local function completion()
   -- }}}
 end
 -- }}}
+
+-- Copilot {{{
+local function copilot()
+	local status, chat = pcall(require, 'CopilotChat')
+	if not status then return end
+
+	chat.setup({
+		model = 'gpt-4.1',
+		temperature = 0.1,
+
+		window = {
+ 			layout = 'horizontal',
+			width = 0.4,
+		},
+
+		auto_insert_mode = true,
+	})
+end
+--}}}
 
 -- telescope {{{
 local function telescope()
@@ -329,4 +349,5 @@ lualine()
 multicursor()
 terminal_cursor()
 jai()
+copilot()
 -- }}}
