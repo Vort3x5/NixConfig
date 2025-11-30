@@ -37,7 +37,7 @@ in
       (nvim-treesitter.withPlugins (p: with p; [
         lua nix python rust c cpp java matlab go
 		bash fish sql vim make yaml toml
-		wgsl llvm
+		wgsl llvm typst
       ] ++ [ tree-sitter-jai ]))
       
       # Git
