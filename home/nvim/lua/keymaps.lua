@@ -67,8 +67,8 @@ vim.keymap.set('n', '<leader>m', ':Make<CR>', { desc = "Compile" })
 vim.keymap.set('n', '<leader>mc', ':Make clean<CR>', { desc = "Clean" })
 vim.keymap.set('n', '<leader>mr', ':Dispatch make clean && make<CR>', { desc = "Recompile" })
 
-vim.keymap.set('n', '<leader>ef', ':cfirst<CR>', { desc = "First error" })
-vim.keymap.set('n', '<leader>el', ':clast<CR>', { desc = "Last error" })
+vim.keymap.set('n', '<leader>EF', ':cfirst<CR>', { desc = "First error" })
+vim.keymap.set('n', '<leader>EL', ':clast<CR>', { desc = "Last error" })
 
 vim.keymap.set('n', ';e', ':cc<CR>', { desc = "Current error" })
 vim.keymap.set('n', ']e', ':cnext<CR>', { desc = "Next error" })
