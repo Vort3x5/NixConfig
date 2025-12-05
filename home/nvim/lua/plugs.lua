@@ -185,7 +185,7 @@ local function copilot()
 	if not status then return end
 
 	chat.setup({
-		model = 'gpt-4.1',
+		model = 'claude-sonnet-4.5',
 		temperature = 0.1,
 
 		window = {
