@@ -48,6 +48,14 @@
 
         # Gaming
 		mangohud gamemode gamescope
+		(lutris.override {
+			extraLibraries =  pkgs: [
+				pkgs.gamemode
+				pkgs.libnghttp2
+				pkgs.openssl
+				pkgs.icu
+			];
+		})
 
         # File manager
 		ranger
