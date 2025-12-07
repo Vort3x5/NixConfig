@@ -47,7 +47,7 @@
 		firefox steam discord
 
         # Gaming
-		mangohud gamemode gamescope
+		mangohud gamemode gamescope wine
 		(lutris.override {
 			extraLibraries =  pkgs: [
 				pkgs.gamemode
