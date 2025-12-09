@@ -47,6 +47,7 @@ fish_add_path $HOME/.local/bin
 bind \t forward-word
 bind \cz complete
 
+export NIXPKGS_ALLOW_UNFREE=1
 clear
 pfetch
 set fish_greeting ""
