@@ -31,7 +31,7 @@
         # Development
 		gcc gnumake gdb
 		python3 lua fasm
-		git
+		git qemu kicad
 
         # Utils
 		wget curl jq
@@ -44,7 +44,7 @@
 		distrobox podman
 
         # Apps
-		firefox steam discord
+		firefox steam discord vlc
 
         # Gaming
 		mangohud gamemode gamescope wine
