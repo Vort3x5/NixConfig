@@ -31,7 +31,7 @@
         # Development
 		gcc gnumake gdb
 		python3 lua fasm
-		git qemu kicad
+		git qemu kicad typst
 
         # Utils
 		wget curl jq
@@ -39,6 +39,7 @@
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard
 		wmname
+		evince
 
 		# Containers
 		distrobox podman
