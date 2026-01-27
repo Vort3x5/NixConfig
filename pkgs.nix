@@ -36,8 +36,8 @@
         # Utils
 		wget curl jq
 		unzip unclutter
-		flameshot shutter lsd ripgrep pfetch killall
-		wl-clipboard
+		flameshot lsd ripgrep pfetch killall
+		wl-clipboard brightnessctl
 		wmname
 		evince
 

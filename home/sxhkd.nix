@@ -28,7 +28,7 @@ in
       "super + a" = "rofi -show run";
       "super + b" = "firefox";
       "super + d" = "discord";
-      "super + p" = "shutter";
+      "super + p" = "flameshot gui";
       "super + s" = "steam";
       "super + t" = "alacritty";
       
