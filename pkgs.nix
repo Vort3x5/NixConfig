@@ -36,7 +36,7 @@
         # Utils
 		wget curl jq
 		unzip unclutter
-		flameshot lsd ripgrep pfetch killall
+		flameshot shutter lsd ripgrep pfetch killall
 		wl-clipboard
 		wmname
 		evince
