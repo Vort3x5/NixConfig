@@ -34,7 +34,7 @@
 		git qemu kicad typst
 
         # Utils
-		ffmpeg wget curl jq openssl
+		ffmpeg wget curl jq openssl nmap
 		unzip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
