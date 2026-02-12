@@ -5,6 +5,16 @@ let
 		version = "1.0.0";
 		src = ./nvim/plugin/tree-sitter-jai;
 	};
+	neosolarized = pkgs.vimUtils.buildVimPlugin {
+		name = "neosolarized.nvim";
+		src = pkgs.fetchgit {
+			url = "https://github.com/svrana/neosolarized.nvim";
+			rev = "0c01fd2ac2ab33918073f57c63bcb2ae5a31d8de";
+			sha256 = "sha256-JfwEf1H38TqXUxVnPpgMKrBQT26bj5rVqbjpLvfx/MI=";
+		};
+		doCheck = false;
+		meta.broken = false;
+	};
 in
 {
   programs.neovim = {
@@ -71,7 +81,7 @@ in
       trouble-nvim
 
     ]) ++ [
-	  pkgs.vimExtraPlugins.neosolarized-nvim-svrana
+	  neosolarized
 	];
     
     extraPackages = with pkgs; [
