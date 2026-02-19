@@ -61,7 +61,7 @@
 				disabled = "#707880";
 			};
 			"bar/Left" = {
-				width = "10%";
+				width = "200";
 				offset-x = "1%";
 				height = "25pt";
 				radius = "12";
@@ -94,8 +94,8 @@
 				override-redirect = true;
 			};
 			"bar/Center" = {
-				width = "14%";
-				offset-x = "43%";
+				width = "300";
+				offset-x = "50%:-150";
 				height = "25pt";
 				radius = "12";
 				fixed-center = true;
@@ -123,8 +123,8 @@
 				override-redirect = true;
 			};
 			"bar/Right" = {
-				width = "15%";
-				offset-x = "84%";
+				width = "300";
+				offset-x = "100%:-330";
 				height = "25pt";
 				radius = "12";
 				fixed-center = true;
