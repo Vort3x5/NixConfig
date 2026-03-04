@@ -32,7 +32,7 @@
 		gcc gnumake gdb
 		python3 lua fasm
 		git qemu kicad typst
-		tchs
+		tcsh
 
         # Utils
 		ffmpeg wget curl jq openssl nmap
