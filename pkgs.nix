@@ -32,20 +32,21 @@
 		gcc gnumake gdb
 		python3 lua fasm
 		git qemu kicad typst
+		tchs
 
         # Utils
 		ffmpeg wget curl jq openssl nmap
 		unzip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
-		wmname
+		wmname binwalk
 		evince
 
 		# Containers
 		distrobox podman docker
 
         # Apps
-		firefox steam discord vlc
+		firefox steam discord vlc obs-studio
 
         # Gaming
 		mangohud gamemode gamescope wine
