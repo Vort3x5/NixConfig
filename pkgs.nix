@@ -5,6 +5,9 @@
         # EFI management
 		efibootmgr
 
+		# Phone Cam
+		droidcam
+
         # Nix
 		age sops ssh-to-age
 
@@ -32,7 +35,7 @@
 		gcc gnumake gdb
 		python3 lua fasm
 		git qemu kicad typst
-		tcsh
+		tcsh octave
 
         # Utils
 		ffmpeg wget curl jq openssl nmap

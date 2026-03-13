@@ -49,7 +49,7 @@ in
 	# Users
 	users.users.vortex = {
 	  isNormalUser = true;
-	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" ];
+	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" "adbusers" ];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";
 	};
@@ -170,6 +170,7 @@ in
         "split_lock_detect=off"
         "quiet"
         "loglevel=3"
+		"usbcore.quirks=041e:4055:bc"
 	];
 
 	boot.extraModulePackages = [ ];
@@ -183,6 +184,7 @@ in
 	# Enable LVM support
 	services.lvm.enable = true;
 
+	hardware.enableAllFirmware = true;
 	hardware.graphics = {
 	  enable = true;
 	  enable32Bit = true;
@@ -263,6 +265,8 @@ in
 	};
 
 	programs.gamemode.enable = true;
+
+	programs.adb.enable = true;
 
     # Time zone and locale
 	time.timeZone = "Europe/Warsaw";
