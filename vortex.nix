@@ -49,13 +49,12 @@ in
 	# Users
 	users.users.vortex = {
 	  isNormalUser = true;
-	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" "adbusers" ];
+	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" "adbusers" "vboxusers" ];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";
 	};
 	programs.fish.enable = true;
 
-	users.extraGroups.viboxusers.members = [ "vortex" ];
 	virtualisation.virtualbox.host.enable = true;
 	virtualisation.docker.enable = true;
 	virtualisation.podman = {

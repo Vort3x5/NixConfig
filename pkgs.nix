@@ -46,7 +46,7 @@
 		evince
 
 		# Containers
-		distrobox podman docker virtualbox
+		distrobox podman docker
 
         # Apps
 		firefox steam discord vlc obs-studio
