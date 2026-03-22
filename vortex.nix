@@ -55,6 +55,8 @@ in
 	};
 	programs.fish.enable = true;
 
+	users.extraGroups.viboxusers.members = [ "vortex" ];
+	virtualisation.virtualbox.enable = true;
 	virtualisation.docker.enable = true;
 	virtualisation.podman = {
 		enable = true;
