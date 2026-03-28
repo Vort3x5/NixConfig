@@ -175,7 +175,7 @@ in
 	];
 
 	boot.extraModulePackages = [ ];
-	boot.blacklistedKernelModules = [ "snd_pcsp" ];
+	boot.blacklistedKernelModules = [ "snd_pcsp", "kvm", "kvm_amd" ];
 
 	boot.extraModprobeConfig = ''
 		options snd-hda-intel model=headset-mode
