@@ -38,7 +38,7 @@
 		tcsh octave
 
         # Utils
-		ffmpeg wget curl jq openssl nmap
+		ffmpeg wget curl jq openssl nmap sshfs
 		unzip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
