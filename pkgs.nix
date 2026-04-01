@@ -39,7 +39,7 @@
 
         # Utils
 		ffmpeg wget curl jq openssl nmap sshfs
-		unzip unclutter
+		unzip zip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
 		wmname binwalk
