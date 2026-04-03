@@ -38,7 +38,7 @@
 		tcsh octave
 
         # Utils
-		ffmpeg wget curl jq openssl nmap sshfs
+		ffmpeg wget curl jq openssl nmap sshfs screen
 		unzip zip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
@@ -46,7 +46,7 @@
 		evince
 
 		# Containers
-		distrobox podman docker
+		distrobox podman docker docker-compose
 
         # Apps
 		firefox steam discord vlc obs-studio
