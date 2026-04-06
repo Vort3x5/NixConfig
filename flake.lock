@@ -150,11 +150,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1775142612,
-        "narHash": "sha256-wMFyCi8q3RlzVWQZT5uWaIvf/xsL2rZsHb1LaiH6tag=",
+        "lastModified": 1775400849,
+        "narHash": "sha256-NHJ6+4qgh69W5lxe3ml0z5iGdgVLFH5XUjrXMBAFXUc=",
         "owner": "NixNeovim",
         "repo": "NixNeovimPlugins",
-        "rev": "194ad253b25d1d419489133282e66cba906423fd",
+        "rev": "3b3936e53bd4cb4c32dd790afd53eaf0771ef3ca",
         "type": "github"
       },
       "original": {
@@ -307,11 +307,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775188331,
-        "narHash": "sha256-/0BoSi0Dg0ON7IW0oscM12WSPBaMSCn36XTt0lHZoy8=",
+        "lastModified": 1775365543,
+        "narHash": "sha256-f50qrK0WwZ9z5EdaMGWOTtALgSF7yb7XwuE7LjCuDmw=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "8f093d0d2f08f37317778bd94db5951d6cce6c46",
+        "rev": "a4ee2de76efb759fe8d4868c33dec9937897916f",
         "type": "github"
       },
       "original": {

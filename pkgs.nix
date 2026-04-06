@@ -33,9 +33,9 @@
 
         # Development
 		gcc gnumake gdb
-		python3 lua fasm
+		python3 lua fasm verilator
 		git qemu kicad typst
-		tcsh octave
+		tcsh octave gtkwave
 
         # Utils
 		ffmpeg wget curl jq openssl nmap sshfs screen
