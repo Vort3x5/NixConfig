@@ -64,11 +64,10 @@ in
 	  initialPassword = "Vort3x5";
 	};
 
-	services.udev.packages = [ pkgs.openocd ];
 	services.udev.extraRules = ''
 		SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="664", GROUP="plugdev", TAG+="uaccess"
 	'';
-
+	services.udev.packages = [ pkgs.openocd ];
 
 	programs.fish.enable = true;
 
