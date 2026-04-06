@@ -49,10 +49,27 @@ in
 	# Users
 	users.users.vortex = {
 	  isNormalUser = true;
-	  extraGroups = [ "wheel" "video" "audio" "networkmanager" "render" "docker" "adbusers" "vboxusers" ];
+	  extraGroups = [ 
+			"wheel" 
+			"video" 
+			"audio" 
+			"networkmanager" 
+			"render" 
+			"docker" 
+			"adbusers" 
+			"vboxusers" 
+			"plugdev" 
+		];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";
 	};
+
+	services.udev.packages = [ pkgs.openocd ];
+	services.udev.extraRules = ''
+		SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="664", GROUP="plugdev", TAG+="uaccess"
+	'';
+
+
 	programs.fish.enable = true;
 
 	virtualisation.virtualbox.host.enable = true;
@@ -175,7 +192,7 @@ in
 	];
 
 	boot.extraModulePackages = [ ];
-	boot.blacklistedKernelModules = [ "snd_pcsp" "kvm" "kvm_amd" ];
+	boot.blacklistedKernelModules = [ "snd_pcsp" "kvm" "kvm_amd" "ftdi_sio" ];
 
 	boot.extraModprobeConfig = ''
 		options snd-hda-intel model=headset-mode

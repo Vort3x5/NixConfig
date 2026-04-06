@@ -38,7 +38,7 @@
 		tcsh octave gtkwave
 
         # Utils
-		ffmpeg wget curl jq openssl nmap sshfs screen
+		ffmpeg usbutils wget curl jq openssl nmap sshfs screen
 		unzip zip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
