@@ -35,7 +35,7 @@
 		gcc gnumake gdb
 		python3 lua fasm verilator
 		git qemu kicad typst
-		tcsh octave gtkwave
+		tcsh octave gnuplot gtkwave
 
         # Utils
 		ffmpeg usbutils wget curl jq openssl nmap sshfs screen
