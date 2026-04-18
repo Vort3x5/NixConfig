@@ -197,6 +197,15 @@ in
 		options snd-hda-intel model=headset-mode
 	'';
 
+	# required for flatpak
+	xdg.portal = {
+		enable = true;
+		extraPortals = [
+			pkgs.xdg-desktop-portal-gtk
+		];
+		config.common.default = "*";
+	};
+	services.flatpak.enable = true;
         
 	# Enable LVM support
 	services.lvm.enable = true;
