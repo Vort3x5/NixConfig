@@ -59,6 +59,7 @@ in
 			"adbusers" 
 			"vboxusers" 
 			"plugdev" 
+			"wireshark" 
 		];
 	  shell = pkgs.fish;
 	  initialPassword = "Vort3x5";

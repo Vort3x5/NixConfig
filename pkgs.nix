@@ -42,7 +42,7 @@
 		unzip zip unclutter
 		flameshot lsd ripgrep pfetch killall
 		wl-clipboard brightnessctl
-		wmname binwalk
+		wmname binwalk wireshark
 		evince
 
 		# Containers
