@@ -56,6 +56,7 @@ in
 			"networkmanager" 
 			"render" 
 			"docker" 
+			"kvm" 
 			"adbusers" 
 			"vboxusers" 
 			"plugdev" 

@@ -19,6 +19,8 @@
 		"vm.vfs_cache_pressure" = 50;
 		"vm.dirty_ratio" = 15;
 	};
+
+	boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
         
 	# Enable NVIDIA drivers
 	services.xserver.videoDrivers = [ "nvidia" ];
@@ -63,7 +65,6 @@
 
 	environment.sessionVariables = {
 	};
-        
 	# Host-machine specific packages
 	environment.systemPackages = with pkgs; [
 	];
