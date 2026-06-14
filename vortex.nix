@@ -26,22 +26,35 @@ let
 	 	src = ./home/misc/Infinity-SDDM.tar.gz;
 
 		sourceRoot = "Infinity-SDDM";
+		nativeBuildInputs = with pkgs; [ gnused ];
     
 		installPhase = ''
 			mkdir -p $out/share/sddm/themes/infinity
 			cp -r * $out/share/sddm/themes/infinity/
 
-			if [ -f $out/share/sddm/themes/infinity/metadata.desktop ]; then
-				${pkgs.gnused}/bin/sed -i '/QtVersion/d' $out/share/sddm/themes/infinity/metadata.desktop
-			fi
-			
 			cp ${./home/misc/metadata.desktop} $out/share/sddm/themes/infinity/metadata.desktop
-			
+
+			find $out/share/sddm/themes/infinity -name '*.qml' -exec \
+				${pkgs.gnused}/bin/sed -i \
+				-e 's|import QtGraphicalEffects|import Qt5Compat.GraphicalEffects|g' \
+				-e 's|/usr/share/sddm/themes/Infinity-SDDM/||g' \
+				{} +
+
 			chmod -R 755 $out/share/sddm/themes/infinity/
 		'';
 	 };
 
-	nativeBuildInputs = with pkgs; [ gnutar gnused ];
+	sddmInfinityPackages = with pkgs.kdePackages; [
+		infinity-sddm
+		plasma-workspace
+		libplasma
+		qtdeclarative
+		qtsvg
+		qt5compat
+		qtvirtualkeyboard
+		kdeclarative
+		kirigami
+	];
 in
 {
 	system.stateVersion = "26.05";
@@ -241,13 +254,6 @@ in
 	    fallout-grub-theme
 		infinity-sddm
 		pkgs.grub2_efi
-
-		pkgs.kdePackages.libplasma
-		pkgs.kdePackages.plasma-workspace
-		pkgs.kdePackages.qtdeclarative
-		pkgs.kdePackages.qtsvg
-		pkgs.kdePackages.kdeclarative
-		pkgs.kdePackages.kservice
 	];
 
 	networking = {
@@ -263,7 +269,9 @@ in
 		sddm = {
 			enable = true;
 			wayland.enable = false;
+			package = pkgs.kdePackages.sddm;
 			theme = "infinity";
+			extraPackages = sddmInfinityPackages;
 		};
 	};
 
