@@ -20,40 +20,41 @@ let
 	};
 
 	infinity-sddm = pkgs.stdenv.mkDerivation {
-	 	pname = "infinity-sddm";
-	 	version = "1.0";
-	 	
-	 	src = ./home/misc/Infinity-SDDM.tar.gz;
+		pname = "infinity-sddm-6";
+		version = "1.1";
 
-		sourceRoot = "Infinity-SDDM";
-		nativeBuildInputs = with pkgs; [ gnused ];
-    
+		src = pkgs.fetchFromGitHub {
+			owner = "L4ki";
+			repo = "Infinity-Plasma-Themes";
+			rev = "e40490e79decb2f76d8e30c737bf7065f3112715";
+			sha256 = "sha256-T2Y0EHrxNLzype41Sb9ohn5vNakLCuJa/triJrGVv9U=";
+		};
+
+		nativeBuildInputs = [ pkgs.gnused ];
+
 		installPhase = ''
-			mkdir -p $out/share/sddm/themes/infinity
-			cp -r * $out/share/sddm/themes/infinity/
-
-			cp ${./home/misc/metadata.desktop} $out/share/sddm/themes/infinity/metadata.desktop
-
-			find $out/share/sddm/themes/infinity -name '*.qml' -exec \
+			theme=$out/share/sddm/themes/Infinity-SDDM-6
+			mkdir -p "$theme"
+			cp -r $src/Infinity-SDDM/Infinity-SDDM-6/. "$theme/"
+			find "$theme" -name '*.qml' -exec \
 				${pkgs.gnused}/bin/sed -i \
-				-e 's|import QtGraphicalEffects|import Qt5Compat.GraphicalEffects|g' \
-				-e 's|/usr/share/sddm/themes/Infinity-SDDM/||g' \
+				-e "s|/usr/share/sddm/themes/Infinity-SDDM-6|$theme|g" \
+				-e "s|icon.name: \"assets/|icon.name: \"$theme/assets/|g" \
+				-e "s|source: \"assets/|source: \"$theme/assets/|g" \
 				{} +
-
-			chmod -R 755 $out/share/sddm/themes/infinity/
+			chmod -R 755 "$theme"
 		'';
-	 };
+	};
 
 	sddmInfinityPackages = with pkgs.kdePackages; [
 		infinity-sddm
 		plasma-workspace
 		libplasma
-		qtdeclarative
-		qtsvg
-		qt5compat
-		qtvirtualkeyboard
-		kdeclarative
 		kirigami
+		plasma5support
+		qt5compat
+		qtsvg
+		qqc2-breeze-style
 	];
 in
 {
@@ -270,7 +271,7 @@ in
 			enable = true;
 			wayland.enable = false;
 			package = pkgs.kdePackages.sddm;
-			theme = "infinity";
+			theme = "Infinity-SDDM-6";
 			extraPackages = sddmInfinityPackages;
 		};
 	};
