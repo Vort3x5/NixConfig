@@ -5,8 +5,8 @@
         # EFI management
 		efibootmgr
 
-		# Phone Cam
-		droidcam
+        # Phone / Android
+		android-tools droidcam
 
         # Nix
 		age sops ssh-to-age
@@ -19,15 +19,15 @@
 		alsa-utils
 
         # Terminal and shell
-		alacritty fish
+		alacritty fish kitty
 
         # Editor
-		neovim vim emacs zathura
+		neovim vim emacs zathura code-cursor
 
         # X11
 		bspwm sxhkd polybar rofi
 		picom feh
-		xorg.xinit xorg.xrandr xorg.xsetroot xorg.xprop
+		xinit xrandr xsetroot xprop
 		xclip
 		arandr
 

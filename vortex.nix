@@ -44,7 +44,7 @@ let
 	nativeBuildInputs = with pkgs; [ gnutar gnused ];
 in
 {
-	system.stateVersion = "25.05";
+	system.stateVersion = "26.05";
 
 	# Users
 	users.users.vortex = {
@@ -85,6 +85,10 @@ in
 		settings = {
 			experimental-features = [ "nix-command" "flakes" ];
 			auto-optimise-store = true;
+			substituters = lib.mkAfter [ "https://attic.xuyh0120.win/lantian" ];
+			trusted-public-keys = lib.mkAfter [
+				"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+			];
 		};
         
 		# keep only latest two nixos versions
@@ -95,8 +99,7 @@ in
 		};
 	};
 
-	boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos;
-	system.modulesTree = [ (lib.getOutput "modules" config.boot.kernelPackages.kernel) ];
+	boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-bore;
 
     # Allow to reboot and poweroff without sudo
 	security.polkit.enable = true;
@@ -239,13 +242,12 @@ in
 		infinity-sddm
 		pkgs.grub2_efi
 
-		pkgs.libsForQt5.plasma-framework
-		pkgs.libsForQt5.plasma-workspace
-		pkgs.libsForQt5.qtquickcontrols2
-		pkgs.libsForQt5.qtgraphicaleffects
-		pkgs.libsForQt5.qtsvg
-		pkgs.libsForQt5.kservice
-		pkgs.libsForQt5.kdeclarative
+		pkgs.kdePackages.libplasma
+		pkgs.kdePackages.plasma-workspace
+		pkgs.kdePackages.qtdeclarative
+		pkgs.kdePackages.qtsvg
+		pkgs.kdePackages.kdeclarative
+		pkgs.kdePackages.kservice
 	];
 
 	networking = {
@@ -253,7 +255,6 @@ in
 			enable = true;
 			wifi.powersave = false;
 		};
-		wireless.enable = false;
 	};
 
     # X11 services
@@ -294,8 +295,6 @@ in
 
 	programs.gamemode.enable = true;
 
-	programs.adb.enable = true;
-
     # Time zone and locale
 	time.timeZone = "Europe/Warsaw";
 	i18n = {
@@ -323,7 +322,7 @@ in
 	fonts.packages = with pkgs; [
 	  liberation_ttf
 	  noto-fonts
-	  noto-fonts-emoji
+	  noto-fonts-color-emoji
 	  terminus_font
 	  terminus_font_ttf
 	];

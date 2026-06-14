@@ -57,62 +57,92 @@ end
 
 -- treesitter {{{
 local function treesitter()
-  local status, configs = pcall(require, 'nvim-treesitter.configs')
+  vim.treesitter.language.register('jai', 'jai')
+
+  vim.api.nvim_create_autocmd('FileType', {
+    callback = function(ev)
+      pcall(vim.treesitter.start, ev.buf)
+      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
+  })
+
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[buf].filetype ~= '' then
+      pcall(vim.treesitter.start, buf)
+    end
+  end
+end
+-- }}}
+
+-- diagnostics {{{
+local function diagnostics()
+  vim.diagnostic.config({
+    signs = false,
+    underline = false,
+    virtual_text = false,
+    virtual_lines = false,
+    update_in_insert = false,
+  })
+end
+-- }}}
+
+-- gitsigns {{{
+local function gitsigns()
+  local status, gs = pcall(require, 'gitsigns')
   if not status then return end
 
-  configs.setup {
-    highlight = {
-      enable = true,
-	  additional_vim_regex_highlighting = false,
-    },
-    indent = {
-      enable = true,
-    },
-  }
-	vim.treesitter.language.register('jai', 'jai')
+  gs.setup({
+    signcolumn = false,
+    numhl = false,
+    linehl = false,
+    culhl = false,
+    current_line_blame = false,
+    signs_staged_enable = false,
+  })
 end
 -- }}}
 
 -- LSP {{{
 local function lsp()
-  local status, lspconfig = pcall(require, 'lspconfig')
-  if not status then return end
-
-  lspconfig.lua_ls.setup({
-    settings = {
-      Lua = {
-        runtime = {
-          version = 'LuaJIT',
-        },
-        workspace = {
-          library = vim.api.nvim_get_runtime_file("", true),
-          checkThirdParty = false,
-        },
-        telemetry = {
-          enable = false,
-        },
-      },
-    },
-  })
-
-	vim.diagnostic.disable();
-
-  lspconfig.nil_ls.setup({})
-  lspconfig.clangd.setup({})
-  lspconfig.pylsp.setup({})
-
-  lspconfig.rust_analyzer.setup({
-    settings = {
-      ['rust-analyzer'] = {
-        cargo = {
-          allFeatures = true,
+  local servers = {
+    lua_ls = {
+      settings = {
+        Lua = {
+          runtime = {
+            version = 'LuaJIT',
+          },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file("", true),
+            checkThirdParty = false,
+          },
+          telemetry = {
+            enable = false,
+          },
         },
       },
     },
-  })
-	vim.fn.timer_start(1000 * 60 * 120, function()
-		vim.cmd("LspRestart")
-	end, {["repeat"] = -1})
+    nil_ls = {},
+    clangd = {},
+    pylsp = {},
+    rust_analyzer = {
+      settings = {
+        ['rust-analyzer'] = {
+          cargo = {
+            allFeatures = true,
+          },
+        },
+      },
+    },
+  }
+
+  for name, cfg in pairs(servers) do
+    vim.lsp.config(name, cfg)
+    vim.lsp.enable(name)
+  end
+
+  vim.fn.timer_start(1000 * 60 * 120, function()
+    vim.cmd("LspRestart")
+  end, { ["repeat"] = -1 })
 end
 -- }}}
 
@@ -341,6 +371,8 @@ end
 colorscheme()
 autopairs()
 treesitter()
+diagnostics()
+gitsigns()
 lsp()
 completion()
 telescope()
