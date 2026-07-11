@@ -18,9 +18,21 @@
 		"vm.swappiness" = 1;
 		"vm.vfs_cache_pressure" = 50;
 		"vm.dirty_ratio" = 15;
+
+		"net.ipv4.tcp_congestion_control" = "bbr";
+		"net.core.default_qdisc" = "fq";
+		"net.ipv4.tcp_fastopen" = 3;
 	};
 
-	boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
+	boot.kernelModules = [ "kvm-amd" "kvm-intel" "tcp_bbr" ];
+
+	# RTL8852CE (rtw89): disable aggressive PCIe/WiFi power saving that
+	# causes throughput drops and latency spikes on newer kernels.
+	boot.extraModprobeConfig = ''
+		options rtw89_core disable_ps_mode=Y
+		options rtw89_pci disable_aspm_l1=Y disable_aspm_l1ss=Y disable_clkreq=Y
+		options cfg80211 ieee80211_regdom=PL
+	'';
         
 	# Enable NVIDIA drivers
 	services.xserver.videoDrivers = [ "nvidia" ];
