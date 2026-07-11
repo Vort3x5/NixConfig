@@ -49,7 +49,7 @@
 		distrobox podman docker docker-compose
 
         # Apps
-		firefox steam discord vlc obs-studio
+		firefox steam discord vlc obs-studio minecraft-launcher
 
         # Gaming
 		mangohud gamemode gamescope wine
