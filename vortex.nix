@@ -81,13 +81,24 @@ in
 	};
 
 	services.udev.extraRules = ''
-		SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="664", GROUP="plugdev", TAG+="uaccess"
+	  # FTDI (już było)
+	  SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="0664", GROUP="plugdev", TAG+="uaccess"
+
+	  # STLINK-V3 (Nucleo-G474RE) — 0483:374e
+	  SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374e", MODE="0666", GROUP="plugdev", TAG+="uaccess"
+
+	  # ST-Link V2 / V2.1 (na zapas)
+	  SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE="0666", GROUP="plugdev", TAG+="uaccess"
+	  SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="0666", GROUP="plugdev", TAG+="uaccess"
 	'';
-	services.udev.packages = [ pkgs.openocd ];
+	services.udev.packages = [ pkgs.openocd pkgs.stlink ];
 
 	programs.fish.enable = true;
 
-	virtualisation.virtualbox.host.enable = true;
+	virtualisation.virtualbox.host = {
+		enable = true;
+		enableExtensionPack = true;
+	};
 	virtualisation.docker.enable = true;
 	virtualisation.podman = {
 		enable = true;
@@ -215,6 +226,8 @@ in
 	boot.extraModprobeConfig = ''
 		options snd-hda-intel model=headset-mode
 	'';
+
+	services.openssh.enable = true;
 
 	# required for flatpak
 	xdg.portal = {
