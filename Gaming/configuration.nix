@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+let
+	elden-ring-convergence = pkgs.callPackage ../pkgs/elden-ring-convergence { };
+in
 {
 	imports = [
 	  ./hardware-configuration.nix
@@ -132,6 +135,13 @@
 	environment.sessionVariables = {
 	};
 	# Host-machine specific packages
-	environment.systemPackages = with pkgs; [
+	environment.systemPackages = [
+		elden-ring-convergence
 	];
+
+	# Optional: pin Steam so Elden Ring does not silently jump to an
+	# unsupported patch while Convergence lags behind (check Nexus notes).
+	# Set Auto-update → "Only update this game when I launch it" in Steam
+	# properties for Elden Ring if Convergence is not yet on the latest patch.
 }
+
