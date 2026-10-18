@@ -7,6 +7,9 @@
 
 		nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
+		# Cursor moves faster than nixpkgs; this flake tracks upstream AppImages (~3x/week).
+		code-cursor-nix.url = "github:jacopone/code-cursor-nix";
+
 		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
 
 		sops-nix = {
@@ -15,7 +18,7 @@
 		};
 	};
 
-	outputs = { self, nixpkgs, nixpkgs-unstable, nix-cachyos-kernel, sops-nix, nixneovimplugins, ... }@inputs:
+	outputs = { self, nixpkgs, nixpkgs-unstable, nix-cachyos-kernel, code-cursor-nix, sops-nix, nixneovimplugins, ... }@inputs:
 	let
 		unstable = import nixpkgs-unstable {
 			system = "x86_64-linux";
@@ -28,6 +31,11 @@
 			({ pkgs, ... }: {
 				nixpkgs.overlays = [
 					nixneovimplugins.overlays.default
+					code-cursor-nix.overlays.default
+					# Keep existing `code-cursor` attr used in vortex/pkgs-common.nix.
+					(final: prev: {
+						code-cursor = final.cursor;
+					})
 				];
 			})
 		];
