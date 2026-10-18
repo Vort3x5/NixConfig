@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, unstable, ... }:
 let
-	elden-ring-convergence = pkgs.callPackage ../pkgs/elden-ring-convergence { };
+	# me3 0.13 lives on unstable; stable currently ships an older me3.
+	elden-ring-convergence = pkgs.callPackage ../pkgs/elden-ring-convergence {
+		me3 = unstable.me3;
+	};
 in
 {
 	imports = [
@@ -38,9 +41,8 @@ in
 		size = 8192;
 	}];
 
-	# The CachyOS 7.1.x kernel still triggers rtw89 firmware SER crashes here,
-	# which forces the link down to low legacy rates.
-	boot.kernelPackages = lib.mkOverride 900 pkgs.linuxPackages;
+	# Stay on vanilla: CachyOS 7.1.x triggered rtw89 firmware SER crashes.
+	# (CachyOS is only pulled in on TUF via vortex/kernel-cachyos.nix.)
 
 	boot.kernel.sysctl = {
 		"vm.swappiness" = 1;
@@ -50,31 +52,60 @@ in
 		"net.ipv4.tcp_congestion_control" = "bbr";
 		"net.core.default_qdisc" = "fq";
 		"net.ipv4.tcp_fastopen" = 3;
+		"net.ipv4.tcp_mtu_probing" = 1;
+		"net.core.rmem_max" = 16777216;
+		"net.core.wmem_max" = 16777216;
 	};
 
 	boot.kernelModules = [ "kvm-amd" "kvm-intel" "tcp_bbr" ];
 
-	# RTL8852CE (rtw89): disable aggressive PCIe/WiFi power saving that
-	# causes throughput drops and latency spikes on newer kernels.
+	# RTL8852CE (rtw89): power-saving / ASPM causes throughput drops and spikes.
+	# Also pin via cmdline so params apply even if modprobe conf races.
+	boot.kernelParams = [
+		"rtw89_core.disable_ps_mode=Y"
+		"rtw89_pci.disable_aspm_l1=Y"
+		"rtw89_pci.disable_aspm_l1ss=Y"
+		"rtw89_pci.disable_clkreq=Y"
+	];
 	boot.extraModprobeConfig = ''
 		options rtw89_core disable_ps_mode=Y
 		options rtw89_pci disable_aspm_l1=Y disable_aspm_l1ss=Y disable_clkreq=Y
 		options cfg80211 ieee80211_regdom=PL
 	'';
 
-	# iwd handles WPA on RTL8852CE more reliably than wpa_supplicant (5 GHz handshake bug).
-	networking.networkmanager.wifi.backend = "iwd";
+	# Same silicon as WiFi; BT coexistence tanks throughput on RTL8852CE.
+	# Soft-block at boot; unblock with: rfkill unblock bluetooth
+	hardware.bluetooth.enable = false;
+	boot.blacklistedKernelModules = [ "btusb" "btrtl" "btintel" "btbcm" "btmtk" ];
 
-	networking.networkmanager.settings = {
-		connectivity = {
-			enabled = false;
+	# iwd: better WPA on this card than wpa_supplicant, but its default
+	# roam-scans every ~60s cause recurring lag spikes on rtw89.
+	networking.networkmanager.wifi.backend = "iwd";
+	networking.wireless.iwd.settings = {
+		General = {
+			AddressRandomization = "disabled";
+			RoamThreshold = "-90";
+			RoamThreshold5G = "-95";
 		};
-		connection = {
-			"wifi.powersave" = 2;
+		Scan = {
+			DisablePeriodicScan = true;
+		};
+		Network = {
+			EnableIPv6 = true;
+			RoutePriorityOffset = 300;
 		};
 	};
 
-	# Tune saved NM/iwd profiles: prefer home 5 GHz AP, don't fall back to phone hotspots.
+	networking.networkmanager = {
+		settings = {
+			connectivity.enabled = false;
+			connection."wifi.powersave" = 2;
+		};
+		# Prefer Cloudflare over ISP (play.pl / UPC) DNS — slow DNS feels like "slow wifi".
+		insertNameservers = [ "1.1.1.1" "1.0.0.1" ];
+	};
+
+	# Prefer home 5 GHz AP; never auto-fallback to phone hotspots.
 	system.activationScripts.wifi-profile-tuning = lib.stringAfter [ "setupSecrets" ] ''
 		nmcli="${pkgs.networkmanager}/bin/nmcli"
 		for id in UPC29324E7 wifi-wlp7s0-1; do
@@ -90,6 +121,10 @@ in
 					802-11-wireless-security.pmf disable \
 					802-11-wireless-security.auth-alg open \
 					802-11-wireless.powersave 2 \
+					ipv4.ignore-auto-dns yes \
+					ipv4.dns "1.1.1.1 1.0.0.1" \
+					ipv6.ignore-auto-dns yes \
+					ipv6.dns "2606:4700:4700::1111 2606:4700:4700::1001" \
 					connection.autoconnect yes \
 					connection.autoconnect-priority 100 \
 					connection.interface-name "" \
@@ -137,6 +172,7 @@ in
 	# Host-machine specific packages
 	environment.systemPackages = [
 		elden-ring-convergence
+		pkgs.iw
 	];
 
 	# Optional: pin Steam so Elden Ring does not silently jump to an

@@ -2,42 +2,42 @@
 {
 	list = with pkgs; [
 
-        # EFI management
+		# EFI management
 		efibootmgr
 
-        # Phone / Android
+		# Phone / Android
 		android-tools droidcam
 
-        # Nix
+		# Nix
 		age sops ssh-to-age
 
-        # Network
+		# Network
 		networkmanager
 		networkmanagerapplet # optional
 
-        # Sound
+		# Sound
 		alsa-utils
 
-        # Terminal and shell
+		# Terminal and shell
 		alacritty fish kitty
 
-        # Editor
+		# Editor
 		neovim vim emacs zathura code-cursor
 
-        # X11
+		# X11
 		bspwm sxhkd polybar rofi
 		picom feh
 		xinit xrandr xsetroot xprop
 		xclip
 		arandr
 
-        # Development
+		# Development
 		gcc gnumake gdb
 		python3 lua fasm verilator
 		git qemu kicad typst
 		tcsh octave gnuplot gtkwave
 
-        # Utils
+		# Utils
 		ffmpeg usbutils wget curl jq openssl nmap sshfs screen
 		unzip zip unclutter
 		flameshot lsd ripgrep pfetch killall
@@ -45,40 +45,26 @@
 		wmname binwalk wireshark
 		evince
 
-		# Containers
-		distrobox podman docker docker-compose
+		# Apps
+		firefox vlc
 
-        # Apps
-		firefox steam discord vlc obs-studio prismlauncher
-
-        # Gaming
-		mangohud gamemode gamescope wine
-		(lutris.override {
-			extraLibraries =  pkgs: [
-				pkgs.gamemode
-				pkgs.libnghttp2
-				pkgs.openssl
-				pkgs.icu
-			];
-		})
-
-        # File manager
+		# File manager
 		ranger
 
-        # ZSA Moonlander tools
+		# ZSA Moonlander tools
 		wally-cli
 		qmk
 
-        # System monitoring
+		# System monitoring
 		lm_sensors
-		acpi htop 
+		acpi htop
 		fastfetch
 
-        # Terminus font
+		# Terminus font
 		terminus_font
 		terminus_font_ttf
 
-        # LVM management tools
+		# LVM management tools
 		lvm2
 	];
 }

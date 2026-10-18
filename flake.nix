@@ -9,54 +9,54 @@
 
 		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
 
-		nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
 		sops-nix = {
 			url = "github:Mic92/sops-nix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 	};
 
-    outputs = {self, nixpkgs, nixpkgs-unstable, nixos-hardware, nix-cachyos-kernel, sops-nix, nixneovimplugins, ...}@inputs:
+	outputs = { self, nixpkgs, nixpkgs-unstable, nix-cachyos-kernel, sops-nix, nixneovimplugins, ... }@inputs:
 	let
-
-    unstable = import nixpkgs-unstable {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
-    };
-
-	sharedModules = [
-	    ./vortex.nix
-
-		sops-nix.nixosModules.sops
-
-		({ pkgs, ... }:{
-			nixpkgs.overlays = [
-				nix-cachyos-kernel.overlays.pinned
-				nixneovimplugins.overlays.default
-			];
-		})
-	];
-
-	mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {
-		system = "x86_64-linux";
-		specialArgs = {
-			inherit inputs unstable;
+		unstable = import nixpkgs-unstable {
+			system = "x86_64-linux";
+			config.allowUnfree = true;
 		};
-		modules = sharedModules ++ extraModules;
-	};
 
+		sharedModules = [
+			./vortex/common.nix
+			sops-nix.nixosModules.sops
+			({ pkgs, ... }: {
+				nixpkgs.overlays = [
+					nixneovimplugins.overlays.default
+				];
+			})
+		];
+
+		mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {
+			system = "x86_64-linux";
+			specialArgs = {
+				inherit inputs unstable;
+			};
+			modules = sharedModules ++ [
+				{ networking.hostName = hostname; }
+			] ++ extraModules;
+		};
 	in
 	{
-		nixosConfigurations = { 
+		nixosConfigurations = {
 			TUF = mkSystem "TUF" [
 				./TUF/hardware-configuration.nix
 				./TUF/configuration.nix
+				./vortex/gaming.nix
+				./vortex/devtools.nix
+				./vortex/kernel-cachyos.nix
 			];
 
 			Gaming = mkSystem "Gaming" [
 				./Gaming/hardware-configuration.nix
 				./Gaming/configuration.nix
+				./vortex/gaming.nix
+				./vortex/devtools.nix
 			];
 
 			Edu = mkSystem "Edu" [

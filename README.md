@@ -9,9 +9,9 @@ Complete NixOS environment managed by Flakes - from bootloader to dotfiles.
 ## Machines
 
 ```
-Gaming  → Desktop (NVIDIA PRIME)
-TUF     → Laptop (NVIDIA Optimus, AMD+RTX)
-Edu     → Laptop (AMD, TLP power management)
+Gaming  → Desktop (NVIDIA PRIME, vanilla kernel)
+TUF     → Laptop (NVIDIA Optimus, CachyOS BORE)
+Edu     → Laptop (AMD, TLP, no Steam/VBox/CachyOS)
 ```
 
 ## Stack
@@ -21,32 +21,37 @@ Edu     → Laptop (AMD, TLP power management)
 **Terminal:** Alacritty + Fish  
 **Editor:** Neovim (custom config)  
 **Secrets:** sops-nix + age encryption  
-**Kernel:** CachyOS (gaming), vanilla (education)  
+**Kernel:** CachyOS on TUF only; vanilla elsewhere  
 
 ## Key Features
 
 - Flake-based reproducible builds
-- Colemak/QWERTY switchable keyboard layouts
-- Gaming setup (Steam, Lutris, Wine, MangoHUD)
+- Shared modules split under `vortex/` (common / gaming / devtools / kernel-cachyos)
+- Gaming setup (Steam, Lutris, Wine, MangoHUD) only on TUF + Gaming
 - NVIDIA Optimus auto-configured PRIME
-- Podman containerization with Docker compat
+- Podman/Docker/VirtualBox only on TUF + Gaming
 
 ## Structure
 
 ```
-├── flake.nix           → System-level flake
-├── home/flake.nix      → Home Manager flake
-├── vortex.nix          → Shared system config
-├── pkgs.nix            → Package lists
-├── {TUF,Gaming,Edu}/   → Per-machine configs
+├── flake.nix              → System-level flake
+├── home/flake.nix         → Home Manager flake
+├── vortex/
+│   ├── common.nix         → Shared base (desktop, user, locales, …)
+│   ├── gaming.nix         → Steam / Lutris / Wine / gamemode
+│   ├── devtools.nix       → Docker, Podman, VirtualBox
+│   ├── kernel-cachyos.nix → CachyOS + Attic (TUF only)
+│   ├── pkgs-common.nix
+│   └── pkgs-gaming.nix
+├── {TUF,Gaming,Edu}/      → Per-machine configs
 │   ├── configuration.nix
 │   ├── hardware-configuration.nix
 │   └── secrets.yaml (encrypted)
 └── home/
-    ├── home.nix        → Shell, Git, aliases
-    ├── neovim.nix      → Editor config
-    ├── x11.nix         → bspwm + sxhkd
-    └── misc/           → Dotfiles, scripts
+    ├── home.nix           → Shell, Git, aliases
+    ├── neovim.nix         → Editor config
+    ├── x11.nix            → bspwm + sxhkd
+    └── misc/              → Dotfiles, scripts
 ```
 
 ## Usage

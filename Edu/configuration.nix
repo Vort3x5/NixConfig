@@ -26,9 +26,7 @@
 		"vm.dirty_ratio" = 15;
 	};
 
-	specialisation = lib.mkForce {};
-
-	boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
+	# Vanilla kernel by default (CachyOS lives only on TUF via vortex/kernel-cachyos.nix).
 	boot.supportedFilesystems = lib.mkForce [ "vfat" "ext4" ];
 
 	# Laptop-specific power management
