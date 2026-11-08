@@ -5,12 +5,9 @@
 		inputs.nix-cachyos-kernel.overlays.pinned
 	];
 
-	nix.settings = {
-		substituters = lib.mkAfter [ "https://attic.xuyh0120.win/lantian" ];
-		trusted-public-keys = lib.mkAfter [
-			"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-		];
-	};
+	# Trust nix-cachyos-kernel's nixConfig (binary cache URL/key) so flake
+	# update picks up cache changes without --accept-flake-config each rebuild.
+	nix.settings.accept-flake-config = true;
 
 	boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-bore;
 
