@@ -5,9 +5,18 @@
 		inputs.nix-cachyos-kernel.overlays.pinned
 	];
 
-	# Trust nix-cachyos-kernel's nixConfig (binary cache URL/key) so flake
-	# update picks up cache changes without --accept-flake-config each rebuild.
-	nix.settings.accept-flake-config = true;
+	# accept-flake-config alone does NOT put substituters into the nix daemon's
+	# /etc/nix/nix.conf — without these, every flake update rebuilds the kernel.
+	# Cache migrated 2026-10: https://github.com/xddxdd/nix-cachyos-kernel/issues/110
+	nix.settings = {
+		accept-flake-config = true;
+		substituters = lib.mkAfter [
+			"https://cache.lantian.pub/lantian"
+		];
+		trusted-public-keys = lib.mkAfter [
+			"lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
+		];
+	};
 
 	boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-bore;
 

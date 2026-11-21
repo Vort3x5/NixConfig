@@ -62,6 +62,8 @@ in
 
 	users.users.vortex = {
 		isNormalUser = true;
+		# 711: nixbld must traverse ~ to reach build-dir on ~/Storage (still no listing).
+		homeMode = "711";
 		extraGroups = [
 			"wheel"
 			"video"
@@ -97,12 +99,15 @@ in
 		settings = {
 			experimental-features = [ "nix-command" "flakes" ];
 			auto-optimise-store = true;
+			# Kernel builds need tens of GiB of scratch; keep them off the full /nix disk.
+			build-dir = "/home/vortex/Storage/nix-tmp";
 		};
 
+		# 2d was wiping locally-built kernels between flake updates.
 		gc = {
 			automatic = true;
 			dates = "weekly";
-			options = "--delete-older-than 2d";
+			options = "--delete-older-than 14d";
 		};
 	};
 

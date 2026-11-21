@@ -1,6 +1,15 @@
 {
 	description = "Vort3x'5 NixOS Config";
 
+	# Applied when this flake is evaluated (needs accept-flake-config).
+	# Daemon/system substituters still live in vortex/kernel-cachyos.nix.
+	nixConfig = {
+		extra-substituters = [ "https://cache.lantian.pub/lantian" ];
+		extra-trusted-public-keys = [
+			"lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
+		];
+	};
+
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";

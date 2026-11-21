@@ -23,7 +23,22 @@
     
     pkgs = import nixpkgs {
       inherit system;
-      overlays = [ nixneovimplugins.overlays.default ];
+      overlays = [
+        nixneovimplugins.overlays.default
+        # GitHub rewrote/re-exported zbirenbaum/copilot.lua@v2.0.4; nixpkgs hash is stale.
+        (final: prev: {
+          vimPlugins = prev.vimPlugins.extend (self: super: {
+            copilot-lua = super.copilot-lua.overrideAttrs (old: {
+              src = prev.fetchFromGitHub {
+                owner = "zbirenbaum";
+                repo = "copilot.lua";
+                rev = "refs/tags/v2.0.4";
+                hash = "sha256-05f76OeWBlFmlUh90tH4XMMKfNI1jnhuIJDqYPPQokA=";
+              };
+            });
+          });
+        })
+      ];
       config.allowUnfree = true;
     };
 

@@ -1,8 +1,10 @@
 { pkgs, layout ? "colemak", ... }:
 let
+	# Keep in sync with Mvsc/Cmpl/tree-sitter-jai (grammar.js + src/parser.c + queries).
+	# Prefers committed parser.c (generate=false) so HM builds need no node/npm.
 	tree-sitter-jai = pkgs.tree-sitter.buildGrammar {
 		language = "jai";
-		version = "1.0.0";
+		version = "1.1.0";
 		src = ./nvim/plugin/tree-sitter-jai;
 	};
 	neosolarized = pkgs.vimUtils.buildVimPlugin {
