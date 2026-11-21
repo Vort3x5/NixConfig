@@ -9,9 +9,9 @@ Complete NixOS environment managed by Flakes - from bootloader to dotfiles.
 ## Machines
 
 ```
-Gaming  → Desktop (NVIDIA PRIME, vanilla kernel)
-TUF     → Laptop (NVIDIA Optimus, CachyOS BORE)
-Edu     → Laptop (AMD, TLP, no Steam/VBox/CachyOS)
+Gaming  → Desktop (NVIDIA PRIME reverse sync)
+TUF     → Laptop (NVIDIA Optimus sync)
+Edu     → Laptop (AMD, TLP, no Steam/VBox gaming stack)
 ```
 
 ## Stack
@@ -21,26 +21,26 @@ Edu     → Laptop (AMD, TLP, no Steam/VBox/CachyOS)
 **Terminal:** Alacritty + Fish  
 **Editor:** Neovim (custom config)  
 **Secrets:** sops-nix + age encryption  
-**Kernel:** CachyOS on TUF only; vanilla elsewhere  
+**Kernel:** vanilla (nixpkgs)
 
 ## Key Features
 
-- Flake-based reproducible builds
-- Shared modules split under `vortex/` (common / gaming / devtools / kernel-cachyos)
+- Single flake for system + home
+- Shared modules under `vortex/` (common / gaming / devtools / sops)
 - Gaming setup (Steam, Lutris, Wine, MangoHUD) only on TUF + Gaming
-- NVIDIA Optimus auto-configured PRIME
+- NVIDIA baseline in `nvidia.nix`; hosts only set PRIME
 - Podman/Docker/VirtualBox only on TUF + Gaming
 
 ## Structure
 
 ```
-├── flake.nix              → System-level flake
-├── home/flake.nix         → Home Manager flake
+├── flake.nix              → System + Home Manager
+├── nvidia.nix             → Shared NVIDIA baseline
 ├── vortex/
 │   ├── common.nix         → Shared base (desktop, user, locales, …)
 │   ├── gaming.nix         → Steam / Lutris / Wine / gamemode
 │   ├── devtools.nix       → Docker, Podman, VirtualBox
-│   ├── kernel-cachyos.nix → CachyOS + Attic (TUF only)
+│   ├── sops.nix           → Shared age / ssh secret wiring
 │   ├── pkgs-common.nix
 │   └── pkgs-gaming.nix
 ├── {TUF,Gaming,Edu}/      → Per-machine configs
@@ -50,7 +50,7 @@ Edu     → Laptop (AMD, TLP, no Steam/VBox/CachyOS)
 └── home/
     ├── home.nix           → Shell, Git, aliases
     ├── neovim.nix         → Editor config
-    ├── x11.nix            → bspwm + sxhkd
+    ├── x11.nix            → bspwm + polybar
     └── misc/              → Dotfiles, scripts
 ```
 
@@ -60,8 +60,12 @@ Edu     → Laptop (AMD, TLP, no Steam/VBox/CachyOS)
 # Rebuild system (as root)
 nixos-rebuild switch --flake .#TUF
 
-# Rebuild home (as user)
-home-manager switch --flake ./home#vortex
+# Rebuild home (as user; `vortex` reads ~/.config/layout → needs impure)
+home-manager switch --impure --flake .#vortex
+
+# Explicit keyboard layout variants (pure)
+home-manager switch --flake .#vortex-colemak
+home-manager switch --flake .#vortex-qwerty
 
 # Update flake inputs
 nix flake update

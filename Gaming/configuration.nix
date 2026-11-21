@@ -41,9 +41,6 @@ in
 		size = 8192;
 	}];
 
-	# Stay on vanilla: CachyOS 7.1.x triggered rtw89 firmware SER crashes.
-	# (CachyOS is only pulled in on TUF via vortex/kernel-cachyos.nix.)
-
 	boot.kernel.sysctl = {
 		"vm.swappiness" = 1;
 		"vm.vfs_cache_pressure" = 50;
@@ -136,40 +133,18 @@ in
 		done
 	'';
 
-	# Enable NVIDIA drivers
-	services.xserver.videoDrivers = [ "nvidia" ];
+	# Host-specific PRIME / compositor (baseline NVIDIA lives in ../nvidia.nix)
 	hardware.nvidia = {
-		open = false;
-		modesetting.enable = true;
-		powerManagement.enable = false;
-		nvidiaSettings = true;
 		forceFullCompositionPipeline = true;
-	    prime = {
+		prime = {
 			reverseSync.enable = true;
 			amdgpuBusId = "PCI:16:0:0";
 			nvidiaBusId = "PCI:1:0:0";
 		};
 	};
-        
-	# Secrets config
-    sops = {
-		defaultSopsFile = ./secrets.yaml;
-		defaultSopsFormat = "yaml";
-		age.keyFile = "/home/vortex/.config/sops/age/keys.txt";
-		
-		secrets = {
-			ssh_private_key = {
-				owner = "vortex";
-				group = "users";
-				mode = "0600";
-				path = "/home/vortex/.ssh/id_ed25519";
-			};
-		};
-    };
 
-	environment.sessionVariables = {
-	};
-	# Host-machine specific packages
+	sops.defaultSopsFile = ./secrets.yaml;
+
 	environment.systemPackages = [
 		elden-ring-convergence
 		pkgs.iw

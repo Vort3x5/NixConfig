@@ -99,11 +99,10 @@ in
 		settings = {
 			experimental-features = [ "nix-command" "flakes" ];
 			auto-optimise-store = true;
-			# Kernel builds need tens of GiB of scratch; keep them off the full /nix disk.
+			# Large builds need scratch space off the root /nix disk (TUF has ~/Storage).
 			build-dir = "/home/vortex/Storage/nix-tmp";
 		};
 
-		# 2d was wiping locally-built kernels between flake updates.
 		gc = {
 			automatic = true;
 			dates = "weekly";

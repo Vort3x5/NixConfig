@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ lib, ... }:
 {
 	imports = [
 	  ./hardware-configuration.nix
@@ -27,7 +27,6 @@
 		"vm.dirty_ratio" = 15;
 	};
 
-	# Vanilla kernel by default (CachyOS lives only on TUF via vortex/kernel-cachyos.nix).
 	boot.supportedFilesystems = lib.mkForce [ "vfat" "ext4" ];
 
 	# Laptop-specific power management
@@ -41,21 +40,5 @@
 		};
 	};
 
-    sops = {
-		defaultSopsFile = ./secrets.yaml;
-		defaultSopsFormat = "yaml";
-		age.keyFile = "/home/vortex/.config/sops/age/keys.txt";
-		
-		secrets = {
-			ssh_private_key = {
-				owner = "vortex";
-				group = "users";
-				mode = "0600";
-				path = "/home/vortex/.ssh/id_ed25519";
-			};
-		};
-    };
-
-	environment.systemPackages = with pkgs; [
-	];
+	sops.defaultSopsFile = ./secrets.yaml;
 }

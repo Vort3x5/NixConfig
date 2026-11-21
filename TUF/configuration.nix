@@ -27,35 +27,14 @@ in
 		"vm.dirty_ratio" = 15;
 	};
 
-	# Enable NVIDIA drivers
-	services.xserver.videoDrivers = [ "nvidia" ];
-	hardware.nvidia = {
-		open = false;
-		modesetting.enable = true;
-		powerManagement.enable = false;
-		nvidiaSettings = true;
-		prime = {
-			sync.enable = true;
-			amdgpuBusId = "PCI:5:0:0";
-			nvidiaBusId = "PCI:1:0:0";
-		};
+	# Host-specific PRIME (baseline NVIDIA lives in ../nvidia.nix)
+	hardware.nvidia.prime = {
+		sync.enable = true;
+		amdgpuBusId = "PCI:5:0:0";
+		nvidiaBusId = "PCI:1:0:0";
 	};
-        
-	# Secrets config
-    sops = {
-		defaultSopsFile = ./secrets.yaml;
-		defaultSopsFormat = "yaml";
-		age.keyFile = "/home/vortex/.config/sops/age/keys.txt";
-		
-		secrets = {
-			ssh_private_key = {
-				owner = "vortex";
-				group = "users";
-				mode = "0600";
-				path = "/home/vortex/.ssh/id_ed25519";
-			};
-		};
-    };
+
+	sops.defaultSopsFile = ./secrets.yaml;
 
 	# Internal mic (Realtek ALC233): fix clipping + RNNoise noise suppression
 	services.pipewire = {

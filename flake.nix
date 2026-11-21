@@ -1,25 +1,17 @@
 {
 	description = "Vort3x'5 NixOS Config";
 
-	# Applied when this flake is evaluated (needs accept-flake-config).
-	# Daemon/system substituters still live in vortex/kernel-cachyos.nix.
-	nixConfig = {
-		extra-substituters = [ "https://cache.lantian.pub/lantian" ];
-		extra-trusted-public-keys = [
-			"lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
-		];
-	};
-
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 		nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-		nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-
 		# Cursor moves faster than nixpkgs; this flake tracks upstream AppImages (~3x/week).
 		code-cursor-nix.url = "github:jacopone/code-cursor-nix";
 
-		nixneovimplugins.url = "github:NixNeovim/NixNeovimPlugins";
+		home-manager = {
+			url = "github:nix-community/home-manager/release-26.05";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 
 		sops-nix = {
 			url = "github:Mic92/sops-nix";
@@ -27,36 +19,85 @@
 		};
 	};
 
-	outputs = { self, nixpkgs, nixpkgs-unstable, nix-cachyos-kernel, code-cursor-nix, sops-nix, nixneovimplugins, ... }@inputs:
+	outputs = { self, nixpkgs, nixpkgs-unstable, code-cursor-nix, home-manager, sops-nix, ... }@inputs:
 	let
+		system = "x86_64-linux";
+
 		unstable = import nixpkgs-unstable {
-			system = "x86_64-linux";
+			inherit system;
 			config.allowUnfree = true;
+		};
+
+		# Shared overlay: Cursor AppImage + alias used by vortex/pkgs-common.nix.
+		cursorOverlay = final: prev: {
+			code-cursor = final.cursor;
 		};
 
 		sharedModules = [
 			./vortex/common.nix
+			./vortex/sops.nix
 			sops-nix.nixosModules.sops
 			({ pkgs, ... }: {
 				nixpkgs.overlays = [
-					nixneovimplugins.overlays.default
 					code-cursor-nix.overlays.default
-					# Keep existing `code-cursor` attr used in vortex/pkgs-common.nix.
-					(final: prev: {
-						code-cursor = final.cursor;
-					})
+					cursorOverlay
 				];
 			})
 		];
 
 		mkSystem = hostname: extraModules: nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
+			inherit system;
 			specialArgs = {
 				inherit inputs unstable;
 			};
 			modules = sharedModules ++ [
 				{ networking.hostName = hostname; }
 			] ++ extraModules;
+		};
+
+		# Home Manager: keep standalone configs so `home-manager switch` stays independent
+		# of nixos-rebuild. Layout is read from ~/.config/layout at eval time.
+		hmPkgs = import nixpkgs {
+			inherit system;
+			overlays = [
+				# GitHub rewrote/re-exported zbirenbaum/copilot.lua@v2.0.4; nixpkgs hash is stale.
+				(final: prev: {
+					vimPlugins = prev.vimPlugins.extend (self: super: {
+						copilot-lua = super.copilot-lua.overrideAttrs (old: {
+							src = prev.fetchFromGitHub {
+								owner = "zbirenbaum";
+								repo = "copilot.lua";
+								rev = "refs/tags/v2.0.4";
+								hash = "sha256-05f76OeWBlFmlUh90tH4XMMKfNI1jnhuIJDqYPPQokA=";
+							};
+						});
+					});
+				})
+			];
+			config.allowUnfree = true;
+		};
+
+		keyboardLayout = nixpkgs.lib.trim (builtins.readFile /home/vortex/.config/layout);
+
+		makeHomeConfig = layout: home-manager.lib.homeManagerConfiguration {
+			pkgs = hmPkgs;
+			modules = [
+				{
+					home = {
+						username = "vortex";
+						homeDirectory = "/home/vortex";
+						stateVersion = "26.05";
+					};
+
+					_module.args = {
+						inherit unstable;
+						layout = layout;
+					};
+				}
+				./home/home.nix
+				./home/x11.nix
+				./home/neovim.nix
+			];
 		};
 	in
 	{
@@ -66,7 +107,6 @@
 				./TUF/configuration.nix
 				./vortex/gaming.nix
 				./vortex/devtools.nix
-				./vortex/kernel-cachyos.nix
 			];
 
 			Gaming = mkSystem "Gaming" [
@@ -80,6 +120,12 @@
 				./Edu/hardware-configuration.nix
 				./Edu/configuration.nix
 			];
+		};
+
+		homeConfigurations = {
+			"vortex-colemak" = makeHomeConfig "colemak";
+			"vortex-qwerty" = makeHomeConfig "qwerty";
+			vortex = makeHomeConfig keyboardLayout;
 		};
 	};
 }
