@@ -4,9 +4,9 @@
 
 	programs.git = {
 		enable = true;
-		userName = "vortex";
-		userEmail = "Faking.Games857@gmail.com";
-		extraConfig = {
+		settings = {
+			user.name = "vortex";
+			user.email = "Faking.Games857@gmail.com";
 			init.defaultBranch = "master";
 			core.editor = "nvim";
 		};
@@ -18,12 +18,21 @@
 	};
 
 	programs.ssh = {
-	enable = true;
-	extraConfig = ''
-Host *
-  AddKeysToAgent yes
-  IdentityFile ~/.ssh/id_ed25519
-	'';
+		enable = true;
+		enableDefaultConfig = false;
+		settings."*" = {
+			AddKeysToAgent = "yes";
+			IdentityFile = "~/.ssh/id_ed25519";
+			ForwardAgent = false;
+			Compression = false;
+			ServerAliveInterval = 0;
+			ServerAliveCountMax = 3;
+			HashKnownHosts = false;
+			UserKnownHostsFile = "~/.ssh/known_hosts";
+			ControlMaster = "no";
+			ControlPath = "~/.ssh/master-%r@%n:%p";
+			ControlPersist = "no";
+		};
 	};
 
 	programs.fish = {
